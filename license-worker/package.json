@@ -1,5 +1,5 @@
 {
-  "name": "sheetinvoice-license-worker",
+  "name": "rowvoice-license-worker",
   "private": true,
   "type": "module",
   "scripts": {

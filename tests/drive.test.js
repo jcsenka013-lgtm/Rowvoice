@@ -60,7 +60,7 @@ test('creates the folder when none exists (the old DriveApp.createFolder failure
   assert.equal(context.getAppFolderId_(), 'new-folder');
   const create = calls.at(-1);
   assert.equal(create.params.method, 'post');
-  assert.deepEqual(JSON.parse(create.params.payload), { name: 'SheetInvoice', mimeType: 'application/vnd.google-apps.folder' });
+  assert.deepEqual(JSON.parse(create.params.payload), { name: 'Rowvoice', mimeType: 'application/vnd.google-apps.folder' });
   assert.equal(props.get('folderId'), 'new-folder');
 });
 

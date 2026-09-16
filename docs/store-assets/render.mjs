@@ -38,7 +38,7 @@ const ASSETS = [
       font-family:'Segoe UI',Roboto,Arial,sans-serif">
       <div style="display:flex;align-items:center;gap:10px">
         ${logoSvg.replace('<svg ', '<svg width="36" height="36" ')}
-        <span style="font-size:21px;font-weight:700;letter-spacing:-0.3px">SheetInvoice</span>
+        <span style="font-size:21px;font-weight:700;letter-spacing:-0.3px">Rowvoice</span>
       </div>
       <div style="font-size:12.5px;line-height:1.35;color:#d6e2f0">Spreadsheet rows to branded PDF invoices, in one click.</div>
     </div>`

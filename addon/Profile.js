@@ -76,8 +76,8 @@ function uploadLogo(base64, mimeType) {
   if (bytes.length > LOGO_MAX_BYTES) {
     throw new Error('Logo must be smaller than 300 KB (file is ' + Math.round(bytes.length / 1024) + ' KB).');
   }
-  var blob = Utilities.newBlob(bytes, mimeType, 'SheetInvoice logo');
-  var file = uploadToDrive_(blob, 'SheetInvoice logo', getAppFolderId_());
+  var blob = Utilities.newBlob(bytes, mimeType, 'Rowvoice logo');
+  var file = uploadToDrive_(blob, 'Rowvoice logo', getAppFolderId_());
   var profile = getProfile();
   profile.logoFileId = file.id;
   writeProfile_(profile);

@@ -9,7 +9,7 @@ Every command runs from the repo root unless it says otherwise.
 The latest code is already in your test Apps Script project.
 
 1. Open the test spreadsheet (its ID is `parentId` in `addon/.clasp.json`) and reload it.
-2. Go to **Extensions → SheetInvoice → Open SheetInvoice**. The permissions changed (`drive` → `drive.file`, plus send mail and openid), so Google asks you to approve them again.
+2. Go to **Extensions → Rowvoice → Open Rowvoice**. The permissions changed (`drive` → `drive.file`, plus send mail and openid), so Google asks you to approve them again.
 3. Work through the **Test checklist** in `README.md`.
 4. **Pro features before licensing exists.** `getPlan_` returns `free` while `LICENSE_API_BASE` is empty. To test emailing, set `EMAIL_IS_PRO_FEATURE = false` in `addon/License.js`, run `cd addon && clasp push`, and **set it back to `true` before release**.
 
@@ -17,20 +17,22 @@ After any code change: `cd addon && clasp push`.
 
 ## 2. Domain and Cloudflare
 
-1. Pick a domain and add it to Cloudflare.
+1. ~~Pick a domain and add it to Cloudflare.~~ Done: **rowvoice.com**. Both configs already use it: the license Worker is served at `api.rowvoice.com`, and the site at `rowvoice.com` and `www.rowvoice.com`. Deploying creates the DNS records and certificates.
 2. Deploy the license Worker:
    ```sh
    cd license-worker
    npx wrangler login
    npx wrangler kv namespace create LICENSES   # paste the id into wrangler.jsonc
-   npm run deploy                              # note the https://sheetinvoice-license.<account>.workers.dev URL
+   npm run deploy
+   curl https://api.rowvoice.com/health        # {"ok":true}
    ```
-3. Deploy the site from `site/` with `npx wrangler deploy`, then attach the domain: **Workers & Pages → sheetinvoice-site → Settings → Domains**.
+3. Deploy the site with `cd site && npx wrangler deploy`, then open https://rowvoice.com.
+4. **Email:** turn on **Cloudflare Email Routing** for rowvoice.com (free) and forward `support@rowvoice.com` to your inbox. The site and legal pages use that address.
 
 ## 3. Connect the add-on to the Worker
 
-1. In `addon/License.js`, set `LICENSE_API_BASE` to the Worker URL, with no trailing slash.
-2. In `addon/appsscript.json`, replace `https://sheetinvoice-license.your-subdomain.workers.dev/` with the real URL, keeping the trailing slash.
+1. In `addon/License.js`, set `LICENSE_API_BASE = 'https://api.rowvoice.com'`. `appsscript.json` already allows it.
+2. Rename the Apps Script project to "Rowvoice" in the script editor (the title is only set there).
 3. Push the changes: `cd addon && clasp push`.
 4. Open the script editor with `clasp open-script`, then run `debugIdentityToken` and approve it. Copy the logged `aud`.
 5. Put the `aud` in `GOOGLE_CLIENT_IDS` in `license-worker/wrangler.jsonc`, then run `npm run deploy` again.
@@ -38,9 +40,9 @@ After any code change: `cd addon && clasp push`.
 
 ## 4. Stripe (test mode first)
 
-1. Create the **Product** "SheetInvoice Pro" with two recurring prices: **$6/month** and **$49/year**.
+1. Create the **Product** "Rowvoice Pro" with two recurring prices: **$6/month** and **$49/year**.
 2. Create a **Payment Link** for each price. Put them in `UPGRADE_URLS` in `addon/License.js`.
-3. Create a **Webhook** endpoint `https://<worker>/api/webhook` with these events:
+3. Create a **Webhook** endpoint `https://api.rowvoice.com/api/webhook` with these events:
    - `checkout.session.completed`
    - `customer.subscription.created`
    - `customer.subscription.updated`
@@ -49,7 +51,7 @@ After any code change: `cd addon && clasp push`.
    Then run `npx wrangler secret put STRIPE_WEBHOOK_SECRET` from `license-worker/`.
 4. **Customer portal:** allow cancellation and switching between the two prices.
 5. **Restricted API key** with Customer portal: Write. Run `npx wrangler secret put STRIPE_SECRET_KEY`.
-6. Set `PORTAL_RETURN_URL` in `wrangler.jsonc` to your site URL, then run `npm run deploy` and `cd ../addon && clasp push`.
+6. `PORTAL_RETURN_URL` is already `https://rowvoice.com/`. Run `npm run deploy` and `cd ../addon && clasp push`.
 7. **End to end:**
    1. Click "Pro $6/mo" in the sidebar and pay with card `4242 4242 4242 4242`.
    2. Click "Already upgraded? Refresh". The sidebar should show Pro.

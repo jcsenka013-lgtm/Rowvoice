@@ -1,8 +1,8 @@
-# SheetInvoice
+# Rowvoice
 
 Google Sheets add-on: select a row, get a branded invoice PDF in Drive, with the invoice number, status and link written back to the sheet.
 
-- **Free:** 5 invoices/month, "Made with SheetInvoice" footer
+- **Free:** 5 invoices/month, "Made with Rowvoice" footer
 - **Pro:** $6/mo or $49/yr, unlimited, no footer, email invoices to clients (license server in `license-worker/`)
 
 ## Layout
@@ -39,7 +39,7 @@ Run every test with `npm test` from the repo root. It needs Node 20+ and nothing
 5. From `addon/`, bind a script to it:
    ```
    cd addon
-   clasp create --type sheets --title "SheetInvoice" --parentId <SPREADSHEET_ID> --rootDir .
+   clasp create --type sheets --title "Rowvoice" --parentId <SPREADSHEET_ID> --rootDir .
    ```
    This writes `addon/.clasp.json`, which is gitignored because it binds to your own script. To reuse an existing script instead, copy `.clasp.json.example` and fill in the IDs.
    If clasp asks to overwrite local files, answer **no**. Then check that `appsscript.json` still lists the seven scopes.
@@ -47,7 +47,7 @@ Run every test with `npm test` from the repo root. It needs Node 20+ and nothing
 
 ## Try it
 
-1. Reload the spreadsheet → **Extensions → SheetInvoice → Open SheetInvoice**, then approve the permissions.
+1. Reload the spreadsheet → **Extensions → Rowvoice → Open Rowvoice**, then approve the permissions.
 2. **Fastest path.**
    1. Click **Insert starter sheet**.
    2. Enter your business name and save.
@@ -60,7 +60,7 @@ Run every test with `npm test` from the repo root. It needs Node 20+ and nothing
    - In the profile, set a tax name and rate, and a tax ID.
    - Map **Discount**, **Tax rate** or **Notes** columns for per-row values.
 5. Select a row and click **Preview** to see the invoice in a dialog. Then click **Create invoice(s)**.
-6. The PDF goes to a `SheetInvoice` folder in Drive. Any missing output columns are added automatically. The row gets the invoice number, `Unpaid` and an "Open PDF" link.
+6. The PDF goes to a `Rowvoice` folder in Drive. Any missing output columns are added automatically. The row gets the invoice number, `Unpaid` and an "Open PDF" link.
 
 ## Test checklist
 

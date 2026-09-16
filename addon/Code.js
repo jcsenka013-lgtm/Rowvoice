@@ -1,11 +1,11 @@
 /**
- * SheetInvoice: add-on entry points (menu, sidebar, sidebar state).
+ * Rowvoice: add-on entry points (menu, sidebar, sidebar state).
  */
 
 function onOpen(e) {
   SpreadsheetApp.getUi()
     .createAddonMenu()
-    .addItem('Open SheetInvoice', 'showSidebar')
+    .addItem('Open Rowvoice', 'showSidebar')
     .addToUi();
 }
 
@@ -14,7 +14,7 @@ function onInstall(e) {
 }
 
 function showSidebar() {
-  var html = HtmlService.createHtmlOutputFromFile('Sidebar').setTitle('SheetInvoice');
+  var html = HtmlService.createHtmlOutputFromFile('Sidebar').setTitle('Rowvoice');
   SpreadsheetApp.getUi().showSidebar(html);
 }
 

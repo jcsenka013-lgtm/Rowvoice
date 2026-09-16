@@ -1,4 +1,4 @@
-# SheetInvoice license Worker
+# Rowvoice license Worker
 
 Cloudflare Worker + KV that tells the add-on whether a Google account is on Pro, counts free-plan usage, opens the Stripe billing portal, and keeps KV in sync with Stripe.
 
@@ -36,23 +36,22 @@ npx wrangler login
 npx wrangler kv namespace create LICENSES      # paste the id into wrangler.jsonc
 npx wrangler secret put STRIPE_WEBHOOK_SECRET   # from the Stripe webhook endpoint
 npx wrangler secret put STRIPE_SECRET_KEY       # restricted key with "Customer portal: Write"
-npm run deploy
+npm run deploy                                  # also creates the api.rowvoice.com DNS record + certificate
 ```
 
 1. **GOOGLE_CLIENT_IDS**: in the Apps Script editor, run `debugIdentityToken()`. Put the logged `aud` into `vars.GOOGLE_CLIENT_IDS` in `wrangler.jsonc`, then redeploy. If you later link the script to a standard GCP project (Phase 4), the audience changes. Add the new ID next to the old one, separated by a comma.
 2. **Stripe**:
-   - Create a "SheetInvoice Pro" product with two recurring prices: $6/month and $49/year.
+   - Create a "Rowvoice Pro" product with two recurring prices: $6/month and $49/year.
    - Create one Payment Link per price.
-   - Add a webhook endpoint `https://<worker>/api/webhook` with these events:
+   - Add a webhook endpoint `https://api.rowvoice.com/api/webhook` with these events:
      - `checkout.session.completed`
      - `customer.subscription.created`
      - `customer.subscription.updated`
      - `customer.subscription.deleted`
    - Configure the customer portal (Settings → Billing → Customer portal) to allow cancellation and switching between the two prices.
-   - Set `PORTAL_RETURN_URL` in `wrangler.jsonc`.
+   - `PORTAL_RETURN_URL` in `wrangler.jsonc` is already `https://rowvoice.com/`.
 3. **Add-on**:
-   - In `addon/License.js`, set `LICENSE_API_BASE` (the Worker origin, no trailing slash) and `UPGRADE_URLS`.
-   - In `appsscript.json`, replace the `your-subdomain` placeholder in `urlFetchWhitelist` with the Worker origin, with a trailing slash.
+   - In `addon/License.js`, set `LICENSE_API_BASE` to `https://api.rowvoice.com` and set `UPGRADE_URLS`. `urlFetchWhitelist` in `appsscript.json` already allows it.
 
 ## Local testing
 

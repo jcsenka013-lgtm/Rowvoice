@@ -1,4 +1,4 @@
-// SheetInvoice license Worker.
+// Rowvoice license Worker.
 //   GET  /api/check-license   -> { plan: "pro" | "free", status, currentPeriodEnd, cancelAtPeriodEnd, usage }
 //   POST /api/usage           -> { month, used }   counts one invoice for this month
 //   POST /api/portal          -> { url }           Stripe customer portal session

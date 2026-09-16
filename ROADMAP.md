@@ -1,10 +1,12 @@
-# SheetInvoice - Product Roadmap & Agent Handoff Plan
+# Rowvoice - Product Roadmap & Agent Handoff Plan
 
-This document outlines the complete roadmap for transforming the SheetInvoice Apps Script prototype into a polished, monetized Google Workspace Marketplace add-on.
+This document outlines the complete roadmap for transforming the Rowvoice Apps Script prototype into a polished, monetized Google Workspace Marketplace add-on.
 
 **Note to Agents:** When picking up a task from this roadmap, please update the status of the item (e.g., change `[ ]` to `[x]`) and document any architectural decisions in the relevant component's README or inline documentation.
 
 Status legend: `[x]` built and unit-tested where possible · `[~]` built, needs verification in a real spreadsheet / account · `[ ]` not started
+
+**Name (2026-09-16):** the product was renamed from SheetInvoice to **Rowvoice**. The trademark was checked and **rowvoice.com** was bought on Cloudflare. The license Worker is served at `api.rowvoice.com`, the site at `rowvoice.com`, and support email is `support@rowvoice.com`.
 
 ---
 

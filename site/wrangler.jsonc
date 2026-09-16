@@ -1,7 +1,11 @@
 {
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
-  "name": "sheetinvoice-site",
+  "name": "rowvoice-site",
   "compatibility_date": "2026-09-01",
+  "routes": [
+    { "pattern": "rowvoice.com", "custom_domain": true },
+    { "pattern": "www.rowvoice.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./public",
     "html_handling": "auto-trailing-slash",

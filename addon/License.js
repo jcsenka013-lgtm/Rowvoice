@@ -9,15 +9,16 @@
  * account per month. The higher count wins, so clearing script data doesn't reset the free limit.
  *
  * To go live:
- *   1. Deploy the Worker and set LICENSE_API_BASE below (no trailing slash).
- *   2. Put the same origin (with a trailing slash) in urlFetchWhitelist in appsscript.json.
+ *   1. Deploy the Worker (served at https://api.rowvoice.com), then set LICENSE_API_BASE below.
+ *      It stays blank until then so testing isn't slowed by calls to a server that doesn't exist yet.
+ *   2. appsscript.json already allows https://api.rowvoice.com/ in urlFetchWhitelist.
  *   3. Run debugIdentityToken() once from the editor and put the logged "aud" into the Worker's
  *      GOOGLE_CLIENT_IDS var.
  *   4. Set UPGRADE_URLS to the two Stripe Payment Links.
  */
 
 var FREE_MONTHLY_LIMIT = 5;
-var LICENSE_API_BASE = ''; // e.g. 'https://sheetinvoice-license.example.workers.dev'
+var LICENSE_API_BASE = ''; // 'https://api.rowvoice.com' once the license Worker is deployed
 var UPGRADE_URLS = { monthly: '', yearly: '' };
 var EMAIL_IS_PRO_FEATURE = true;
 

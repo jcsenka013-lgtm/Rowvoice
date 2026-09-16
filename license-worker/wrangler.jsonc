@@ -1,9 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "sheetinvoice-license",
+  "name": "rowvoice-license",
   "main": "src/index.js",
   "compatibility_date": "2026-09-01",
   "observability": { "enabled": true },
+  // Served at https://api.rowvoice.com (DNS record + certificate are created on deploy).
+  "routes": [{ "pattern": "api.rowvoice.com", "custom_domain": true }],
   "kv_namespaces": [
     // Create with: npx wrangler kv namespace create LICENSES   (then paste the id here)
     { "binding": "LICENSES", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
@@ -13,7 +15,7 @@
     // Get it by running debugIdentityToken() in the Apps Script editor.
     "GOOGLE_CLIENT_IDS": "",
     // Where Stripe's billing portal sends users back to.
-    "PORTAL_RETURN_URL": "https://your-domain.example/"
+    "PORTAL_RETURN_URL": "https://rowvoice.com/"
   }
   // Secrets (not in this file):
   //   npx wrangler secret put STRIPE_WEBHOOK_SECRET

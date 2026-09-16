@@ -7,12 +7,12 @@ These are the Phase 4 steps. They're all manual (Google Cloud console and Market
 - The site from Phase 3 is deployed on a custom domain, and the domain is verified in [Google Search Console](https://search.google.com/search-console) with the same Google account that owns the GCP project.
 - The privacy policy and terms have no placeholders left (`grep -rn "todo\|CONTACT_EMAIL\|MARKETPLACE_URL" site/public`).
 - The license Worker is deployed, and `LICENSE_API_BASE` and `UPGRADE_URLS` are set in `addon/License.js`.
-- `urlFetchWhitelist` in `appsscript.json` has the Worker origin instead of the `your-subdomain` placeholder. It is **required** for published add-ons that call `UrlFetchApp`.
+- `urlFetchWhitelist` in `appsscript.json` lists `https://www.googleapis.com/` (Drive) and `https://api.rowvoice.com/` (license Worker). It is **required** for published add-ons that call `UrlFetchApp`.
 - The Stripe customer portal is configured, and `STRIPE_SECRET_KEY` and `PORTAL_RETURN_URL` are set on the Worker.
 
 ## 1. Standard GCP project
 
-1. Create a project in the [Cloud console](https://console.cloud.google.com/), e.g. `sheetinvoice-prod`.
+1. Create a project in the [Cloud console](https://console.cloud.google.com/), e.g. `rowvoice-prod`.
 2. Copy the **project number**, not the project ID.
 3. In the Apps Script editor, go to **Project Settings → Google Cloud Platform (GCP) Project → Change project** and paste the number.
 4. The OAuth client, and so the ID token audience, changes. Re-run `debugIdentityToken()` and add the new `aud` to `GOOGLE_CLIENT_IDS` in the Worker. Keep the old value until everyone is on the new deployment.
@@ -22,20 +22,20 @@ These are the Phase 4 steps. They're all manual (Google Cloud console and Market
 | Field | Value |
 | --- | --- |
 | User type | External |
-| App name | SheetInvoice |
+| App name | Rowvoice |
 | Support email | the support address used on the site |
 | App logo | 120×120 PNG: `docs/store-assets/oauth-logo-120.png` |
-| App domain / homepage | `https://<your-domain>/` |
-| Privacy policy | `https://<your-domain>/privacy.html` |
-| Terms of service | `https://<your-domain>/terms.html` |
-| Authorized domains | `<your-domain>` |
+| App domain / homepage | `https://rowvoice.com/` |
+| Privacy policy | `https://rowvoice.com/privacy.html` |
+| Terms of service | `https://rowvoice.com/terms.html` |
+| Authorized domains | `rowvoice.com` |
 
 Scopes. These must match `addon/appsscript.json` exactly. Use these justifications:
 
 | Scope | Justification |
 | --- | --- |
 | `spreadsheets.currentonly` | Reads the header row and the rows the user selects in the spreadsheet where they opened the add-on, and writes the invoice number, status and PDF link back to those rows. |
-| `drive.file` | Creates a "SheetInvoice" folder, saves generated invoice PDFs and the user's uploaded logo, and reads back only those app-created files. Has no access to any other Drive content. |
+| `drive.file` | Creates a "Rowvoice" folder, saves generated invoice PDFs and the user's uploaded logo, and reads back only those app-created files. Has no access to any other Drive content. |
 | `script.container.ui` | Shows the add-on sidebar and the invoice preview dialog inside Google Sheets. |
 | `script.external_request` | Makes one HTTPS call to our license server to check whether the user has a Pro subscription. No spreadsheet data is sent. |
 | `script.send_mail` | Pro users can email an invoice PDF to the client listed in the row, from their own account, only when they click Create with "Email each invoice" ticked or click "Email selected". The add-on cannot read mail. |
@@ -67,11 +67,11 @@ Verification notes:
    - Paste the **same scopes** as the manifest.
    - Add developer links (site, privacy, terms, support).
 3. **Store listing**:
-   - Application name: SheetInvoice
+   - Application name: Rowvoice
    - Short description (≤ 80 chars): `Turn Google Sheets rows into branded PDF invoices saved to your Drive.`
    - Detailed description:
 
-     > Select a row in Google Sheets, click Create, and SheetInvoice makes a branded PDF invoice in your Google Drive. It writes the invoice number, status and PDF link back to your sheet.
+     > Select a row in Google Sheets, click Create, and Rowvoice makes a branded PDF invoice in your Google Drive. It writes the invoice number, status and PDF link back to your sheet.
      >
      > • Works with the sheet you already have. It finds your header row and matches columns like Client, Total and Due date automatically.
      > • Starting from scratch? Insert a ready-made invoice sheet in one click.

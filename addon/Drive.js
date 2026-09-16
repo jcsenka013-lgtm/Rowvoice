@@ -12,7 +12,7 @@
 
 var DRIVE_API = 'https://www.googleapis.com/drive/v3';
 var DRIVE_UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3';
-var APP_FOLDER_NAME = 'SheetInvoice';
+var APP_FOLDER_NAME = 'Rowvoice';
 var FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 /** Calls the Drive API. Returns the raw HTTPResponse for 2xx; throws a readable error otherwise. */
@@ -49,7 +49,7 @@ function driveGetMetadata_(fileId, fields) {
   }
 }
 
-/** Returns the ID of the user's "SheetInvoice" Drive folder, creating it if missing or trashed. */
+/** Returns the ID of the user's "Rowvoice" Drive folder, creating it if missing or trashed. */
 function getAppFolderId_() {
   var props = PropertiesService.getUserProperties();
   var folderId = props.getProperty('folderId');
@@ -80,7 +80,7 @@ function uploadToDrive_(blob, name, parentId) {
   var metadata = { name: name || blob.getName() || 'Untitled' };
   if (parentId) metadata.parents = [parentId];
 
-  var boundary = 'sheetinvoice' + Utilities.getUuid().replace(/-/g, '');
+  var boundary = 'rowvoice' + Utilities.getUuid().replace(/-/g, '');
   var head = '--' + boundary + '\r\n' +
     'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
     JSON.stringify(metadata) + '\r\n' +

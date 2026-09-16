@@ -221,7 +221,7 @@ for (const file of ['Classic.html', 'Modern.html']) {
   test(`${file}: renders totals breakdown, tax ID and notes, escaping client data`, () => {
     const html = renderTemplate(file, { invoice: fullInvoice, profile: sampleProfile, logo: '', showFooter: true });
     for (const text of ['Subtotal', '$750.00', 'Discount', '-$50.00', 'VAT (20%)', '$140.00', '$840.00',
-      'Tax ID: VAT GB123456789', 'Notes', 'PO 4411', 'Made with SheetInvoice', 'Globex &lt;Ltd&gt;']) {
+      'Tax ID: VAT GB123456789', 'Notes', 'PO 4411', 'Made with Rowvoice', 'Globex &lt;Ltd&gt;']) {
       assert.ok(html.includes(text), `${file} should include ${text}`);
     }
     assert.ok(!html.includes('Globex <Ltd>'));
@@ -232,7 +232,7 @@ for (const file of ['Classic.html', 'Modern.html']) {
     const html = renderTemplate(file, {
       invoice: plainInvoice, profile: Object.assign({}, sampleProfile, { taxId: '' }), logo: '', showFooter: false
     });
-    for (const text of ['Subtotal', 'Discount', 'Tax ID', 'Notes', 'Made with SheetInvoice']) {
+    for (const text of ['Subtotal', 'Discount', 'Tax ID', 'Notes', 'Made with Rowvoice']) {
       assert.ok(!html.includes(text), `${file} should not include ${text}`);
     }
   });

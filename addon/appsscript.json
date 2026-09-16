@@ -13,6 +13,6 @@
   ],
   "urlFetchWhitelist": [
     "https://www.googleapis.com/",
-    "https://sheetinvoice-license.your-subdomain.workers.dev/"
+    "https://api.rowvoice.com/"
   ]
 }
