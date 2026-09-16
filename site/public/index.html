@@ -8,8 +8,10 @@
   <meta property="og:title" content="Rowvoice: invoices from Google Sheets rows">
   <meta property="og:description" content="Select a row, get a branded PDF invoice. Your data stays in your Google account.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rowvoice.com/">
   <meta name="theme-color" content="#1e3a5f">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://rowvoice.com/">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,8 +25,7 @@
         <a class="nav-link" href="#how">How it works</a>
         <a class="nav-link" href="#pricing">Pricing</a>
         <a class="nav-link" href="#faq">FAQ</a>
-        <!-- TODO: replace every MARKETPLACE_URL with the Google Workspace Marketplace listing URL -->
-        <a class="btn btn-primary btn-sm" href="MARKETPLACE_URL">Install free</a>
+        <a class="btn btn-primary btn-sm" href="mailto:support@rowvoice.com?subject=Tell%20me%20when%20Rowvoice%20launches" data-install="Install free">Notify me</a>
       </nav>
     </div>
   </header>
@@ -33,11 +34,11 @@
     <section class="hero">
       <div class="wrap">
         <div>
-          <span class="eyebrow">Google Sheets add-on</span>
+          <span class="eyebrow">Google Sheets add-on<span data-prelaunch> · launching soon</span></span>
           <h1>Your spreadsheet already has the invoice. Now it's a PDF.</h1>
           <p class="lede">Select a row, click Create, and Rowvoice makes a branded PDF invoice in your Google Drive. It also writes the invoice number, status and link back to the sheet.</p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="MARKETPLACE_URL">Install on Google Sheets</a>
+            <a class="btn btn-primary" href="mailto:support@rowvoice.com?subject=Tell%20me%20when%20Rowvoice%20launches" data-install="Install on Google Sheets">Get notified at launch</a>
             <a class="btn btn-ghost" href="#how">See how it works</a>
           </div>
           <p class="fineprint">Free for 5 invoices a month. No credit card. Nothing to learn.</p>
@@ -162,7 +163,7 @@
               <li>Logo, line items, tax and discounts</li>
               <li>Small "Made with Rowvoice" footer</li>
             </ul>
-            <a class="btn btn-ghost" href="MARKETPLACE_URL">Install free</a>
+            <a class="btn btn-ghost" href="mailto:support@rowvoice.com?subject=Tell%20me%20when%20Rowvoice%20launches" data-install="Install free">Get launch updates</a>
           </div>
           <div class="plan featured">
             <h3>Pro <span class="badge">Most popular</span></h3>
@@ -175,7 +176,7 @@
               <li>Only your branding on every invoice</li>
               <li>Everything in Free</li>
             </ul>
-            <a class="btn btn-primary" href="MARKETPLACE_URL">Install, then upgrade in the sidebar</a>
+            <a class="btn btn-primary" href="mailto:support@rowvoice.com?subject=Tell%20me%20when%20Rowvoice%20launches" data-install="Install, then upgrade in the sidebar">Get notified at launch</a>
           </div>
         </div>
         <p class="fineprint" style="margin-top:20px">You upgrade from inside the add-on, so Pro is linked to the Google account you use it with.</p>
@@ -190,7 +191,7 @@
         <div class="faq">
           <details>
             <summary>What can Rowvoice access?</summary>
-            <p>It can open only the spreadsheet you use it in and files it created itself, such as your invoice PDFs and logo. It can't browse or read the rest of your Google Drive. It can send email as you, but only when you choose to email an invoice. It can't read your inbox. See the <a href="privacy.html">privacy policy</a> for details.</p>
+            <p>It can open only the spreadsheet you use it in and files it created itself, such as your invoice PDFs and logo. It can't browse or read the rest of your Google Drive. It can send email as you, but only when you choose to email an invoice. It can't read your inbox. See the <a href="/privacy">privacy policy</a> for details.</p>
           </details>
           <details>
             <summary>Where are my invoices stored?</summary>
@@ -220,7 +221,7 @@
       <div class="wrap">
         <h2>Send your next invoice from the sheet you already have</h2>
         <div class="cta-row">
-          <a class="btn btn-primary" href="MARKETPLACE_URL">Install on Google Sheets</a>
+          <a class="btn btn-primary" href="mailto:support@rowvoice.com?subject=Tell%20me%20when%20Rowvoice%20launches" data-install="Install on Google Sheets">Get notified at launch</a>
         </div>
       </div>
     </section>
@@ -230,8 +231,8 @@
     <div class="wrap">
       <span>© 2026 Rowvoice</span>
       <nav aria-label="Footer">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
         <a href="mailto:support@rowvoice.com">Contact</a>
       </nav>
     </div>
@@ -251,5 +252,6 @@
       });
     });
   </script>
+  <script src="site.js" defer></script>
 </body>
 </html>

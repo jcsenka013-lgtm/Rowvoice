@@ -18,15 +18,8 @@ After any code change: `cd addon && clasp push`.
 ## 2. Domain and Cloudflare
 
 1. ~~Pick a domain and add it to Cloudflare.~~ Done: **rowvoice.com**. Both configs already use it: the license Worker is served at `api.rowvoice.com`, and the site at `rowvoice.com` and `www.rowvoice.com`. Deploying creates the DNS records and certificates.
-2. Deploy the license Worker:
-   ```sh
-   cd license-worker
-   npx wrangler login
-   npx wrangler kv namespace create LICENSES   # paste the id into wrangler.jsonc
-   npm run deploy
-   curl https://api.rowvoice.com/health        # {"ok":true}
-   ```
-3. Deploy the site with `cd site && npx wrangler deploy`, then open https://rowvoice.com.
+2. ✅ **Done:** the license Worker is deployed, and https://api.rowvoice.com/health returns `{"ok":true}`. Redeploy after config changes with `cd license-worker && npm run deploy`.
+3. ✅ **Done:** the site is live at https://rowvoice.com, www, `/privacy` and `/terms`, with security headers, robots.txt and a sitemap. Until launch, the install buttons are "Notify me" email links. Redeploy with `cd site && npx wrangler deploy`.
 4. **Email:** turn on **Cloudflare Email Routing** for rowvoice.com (free) and forward `support@rowvoice.com` to your inbox. The site and legal pages use that address.
 
 ## 3. Connect the add-on to the Worker
@@ -63,9 +56,9 @@ After any code change: `cd addon && clasp push`.
 
 1. Replace every placeholder:
    ```sh
-   grep -rn "todo\|CONTACT_EMAIL\|MARKETPLACE_URL" site/public
+   grep -rn "todo" site/public
    ```
-   You need a legal name, postal address, contact email, refund policy and governing law. `MARKETPLACE_URL` comes in step 7.
+   You need a legal name, postal address, contact email, refund policy and governing law.
 2. Have a lawyer review `privacy.html` and `terms.html`.
 3. Verify the domain in [Google Search Console](https://search.google.com/search-console), using the Google account that will own the GCP project.
 
@@ -86,7 +79,7 @@ Follow `docs/PUBLISHING.md` sections 1–3:
 3. Publish **Unlisted**. Test with 3–5 people, on both Gmail and Workspace accounts.
 4. After verification is approved:
    - Switch the listing to **Public**.
-   - Replace `MARKETPLACE_URL` on the site and redeploy.
+   - Set `MARKETPLACE_URL` in `site/public/site.js`, then redeploy the site.
 
 ## 8. Go live with payments
 

@@ -15,7 +15,7 @@ Search `public/` for these placeholders and replace them all:
 
 | Placeholder | Replace with |
 | --- | --- |
-| `MARKETPLACE_URL` | Google Workspace Marketplace listing URL |
+| `MARKETPLACE_URL` in `public/site.js` | Google Workspace Marketplace listing URL. Until it's set, install buttons are "Notify me" email links and "launching soon" shows. |
 | ~~`CONTACT_EMAIL`~~ | Done: `support@rowvoice.com`. Set up Cloudflare Email Routing so it reaches you, and use the same address on the OAuth consent screen. |
 | `<mark class="todo">` blocks | Legal name, postal address, refund policy, governing law |
 

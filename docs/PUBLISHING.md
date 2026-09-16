@@ -5,7 +5,7 @@ These are the Phase 4 steps. They're all manual (Google Cloud console and Market
 ## 0. Prerequisites
 
 - The site from Phase 3 is deployed on a custom domain, and the domain is verified in [Google Search Console](https://search.google.com/search-console) with the same Google account that owns the GCP project.
-- The privacy policy and terms have no placeholders left (`grep -rn "todo\|CONTACT_EMAIL\|MARKETPLACE_URL" site/public`).
+- The privacy policy and terms have no placeholders left (`grep -rn "todo" site/public`).
 - The license Worker is deployed, and `LICENSE_API_BASE` and `UPGRADE_URLS` are set in `addon/License.js`.
 - `urlFetchWhitelist` in `appsscript.json` lists `https://www.googleapis.com/` (Drive) and `https://api.rowvoice.com/` (license Worker). It is **required** for published add-ons that call `UrlFetchApp`.
 - The Stripe customer portal is configured, and `STRIPE_SECRET_KEY` and `PORTAL_RETURN_URL` are set on the Worker.
@@ -26,8 +26,8 @@ These are the Phase 4 steps. They're all manual (Google Cloud console and Market
 | Support email | the support address used on the site |
 | App logo | 120×120 PNG: `docs/store-assets/oauth-logo-120.png` |
 | App domain / homepage | `https://rowvoice.com/` |
-| Privacy policy | `https://rowvoice.com/privacy.html` |
-| Terms of service | `https://rowvoice.com/terms.html` |
+| Privacy policy | `https://rowvoice.com/privacy` |
+| Terms of service | `https://rowvoice.com/terms` |
 | Authorized domains | `rowvoice.com` |
 
 Scopes. These must match `addon/appsscript.json` exactly. Use these justifications:
@@ -104,4 +104,4 @@ Verification notes:
    - An upgrade with a *different* billing email is still credited to the Google account.
    - Cancel in the Stripe customer portal. The account drops to free once the period ends, within the add-on's 6-hour Pro cache.
    - A sheet with a title banner is detected correctly.
-3. Once OAuth verification is approved, switch visibility to **Public** and replace `MARKETPLACE_URL` on the site.
+3. Once OAuth verification is approved, switch visibility to **Public**, then set `MARKETPLACE_URL` in `site/public/site.js` and redeploy the site.
