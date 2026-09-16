@@ -74,7 +74,12 @@ async function billingPortal(email, env) {
       Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body: new URLSearchParams({ customer: license.customerId, return_url: env.PORTAL_RETURN_URL })
+    body: new URLSearchParams({
+      customer: license.customerId,
+      return_url: env.PORTAL_RETURN_URL,
+      // Created by scripts/stripe-setup.mjs; without it Stripe uses the dashboard's default portal settings.
+      ...(env.PORTAL_CONFIGURATION_ID ? { configuration: env.PORTAL_CONFIGURATION_ID } : {})
+    })
   });
   const session = await response.json().catch(() => ({}));
   if (!response.ok || !session.url) {

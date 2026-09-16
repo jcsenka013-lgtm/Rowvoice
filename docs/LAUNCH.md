@@ -24,39 +24,27 @@ After any code change: `cd addon && clasp push`.
 
 ## 3. Connect the add-on to the Worker
 
-1. ✅ **Done:** `LICENSE_API_BASE` is `https://api.rowvoice.com` and the add-on is pushed.
-2. **You:** open the test spreadsheet, reload it, and open **Extensions → Rowvoice → Open Rowvoice**. That's all. The Worker rejects the first request, because it doesn't know the add-on's client ID yet, and records the ID.
-3. Read the recorded ID and allow it:
-   ```sh
-   cd license-worker
-   npx wrangler kv key get --binding LICENSES --remote setup:unrecognized-audience
-   ```
-   Put the value in `GOOGLE_CLIENT_IDS` in `wrangler.jsonc`, then run `npm run deploy`.
-4. Reload the sidebar. It should still say "Free plan", and `npm run tail` should show no `Rejected ID token` warnings.
-5. Optional: rename the Apps Script project to "Rowvoice" in the script editor. The title can only be changed there, and users never see it.
-
-Fallback if nothing is recorded: in the script editor, run `debugIdentityToken` and copy the `aud` from the execution log.
+✅ **Done.** The add-on calls `https://api.rowvoice.com`, and the add-on's Google client ID is in `GOOGLE_CLIENT_IDS`.
+- **Optional:** rename the Apps Script project to "Rowvoice" in the script editor. Users never see the title.
+- **If the client ID ever changes** (it will when you link a standard GCP project in step 6):
+  1. Open the sidebar once.
+  2. Run `cd license-worker && npx wrangler kv key get --binding LICENSES --remote setup:unrecognized-audience`.
+  3. Add the value to `GOOGLE_CLIENT_IDS`, separated by a comma.
+  4. Run `npm run deploy`.
 
 ## 4. Stripe (test mode first)
 
-1. Create the **Product** "Rowvoice Pro" with two recurring prices: **$6/month** and **$49/year**.
-2. Create a **Payment Link** for each price. Put them in `UPGRADE_URLS` in `addon/License.js`.
-3. Create a **Webhook** endpoint `https://api.rowvoice.com/api/webhook` with these events:
-   - `checkout.session.completed`
-   - `customer.subscription.created`
-   - `customer.subscription.updated`
-   - `customer.subscription.deleted`
+✅ **Done in test mode** by `license-worker/scripts/stripe-setup.mjs`, using the test key from `.env`:
+- "Rowvoice Pro" product with $6/month and $49/year prices, and one Payment Link for each (in `UPGRADE_URLS`)
+- A webhook to `https://api.rowvoice.com/api/webhook`. Delivery was verified with a throwaway subscription, which was then deleted.
+- A customer portal configuration (`PORTAL_CONFIGURATION_ID`) with cancel at period end, switching between monthly and yearly, and invoice history
+- `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` stored as Worker secrets
 
-   Then run `npx wrangler secret put STRIPE_WEBHOOK_SECRET` from `license-worker/`.
-4. **Customer portal:** allow cancellation and switching between the two prices.
-5. **Restricted API key** with Customer portal: Write. Run `npx wrangler secret put STRIPE_SECRET_KEY`.
-6. `PORTAL_RETURN_URL` is already `https://rowvoice.com/`. Run `npm run deploy` and `cd ../addon && clasp push`.
-7. **End to end:**
-   1. Click "Pro $6/mo" in the sidebar and pay with card `4242 4242 4242 4242`.
-   2. Click "Already upgraded? Refresh". The sidebar should show Pro.
-   3. Create an invoice and check it has no footer.
-   4. Email it.
-   5. Open "Manage billing" and cancel.
+**You: test it end to end**
+1. Reload the spreadsheet and open the Rowvoice sidebar. Click **Pro $6/mo** and pay with card `4242 4242 4242 4242`, any future date and any CVC.
+2. Back in the sidebar, click **Already upgraded? Refresh**. It should say **Pro plan**.
+3. Create an invoice and check it has no "Made with Rowvoice" footer. Tick **Email each invoice** and check the email arrives.
+4. Click **Manage billing**. The Stripe portal should open. Cancel there, and the subscription ends at the period end.
 
 ## 5. Legal and site
 
@@ -88,6 +76,9 @@ Follow `docs/PUBLISHING.md` sections 1–3:
    - Set `MARKETPLACE_URL` in `site/public/site.js`, then redeploy the site.
 
 ## 8. Go live with payments
+
+Fastest path: run `STRIPE_API_KEY=<live secret key> node scripts/stripe-setup.mjs` from `license-worker/`. It creates the live product, links, webhook and portal, and stores both secrets. Then put the printed links in `UPGRADE_URLS` and the portal ID in `PORTAL_CONFIGURATION_ID`, deploy the Worker, and run `clasp push`.
+
 
 1. Repeat step 4 in Stripe **live mode**: new prices and Payment Links, a new webhook signing secret and a live restricted key.
 2. Update `UPGRADE_URLS`, then run `wrangler secret put` for both secrets.

@@ -23,9 +23,11 @@
 	"vars": {
 		// Comma-separated OAuth client IDs allowed as the ID token audience.
 		// Get it by running debugIdentityToken() in the Apps Script editor.
-		"GOOGLE_CLIENT_IDS": "",
+		"GOOGLE_CLIENT_IDS": "148675355160-rcolcj6v180gul3tgorleplqqmbcski9.apps.googleusercontent.com",
 		// Where Stripe's billing portal sends users back to.
-		"PORTAL_RETURN_URL": "https://rowvoice.com/"
+		"PORTAL_RETURN_URL": "https://rowvoice.com/",
+		// Stripe customer portal configuration (TEST mode), from scripts/stripe-setup.mjs.
+		"PORTAL_CONFIGURATION_ID": "bpc_1UGQtDCgmPZGfyMpeTX2HMED"
 	}
 	// Secrets (not in this file):
 	//   npx wrangler secret put STRIPE_WEBHOOK_SECRET

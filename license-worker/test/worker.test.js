@@ -219,6 +219,11 @@ test('portal: 404 without a subscription, session URL with one', async () => {
   assert.equal(sent.get('customer'), 'cus_1');
   assert.equal(sent.get('return_url'), 'https://site.test/');
   assert.equal(stripeRequests[0].init.headers.Authorization, 'Bearer sk_test_x');
+  assert.equal(sent.get('configuration'), null);
+
+  env.PORTAL_CONFIGURATION_ID = 'bpc_123';
+  await post('/api/portal', token);
+  assert.equal(new URLSearchParams(String(stripeRequests[1].init.body)).get('configuration'), 'bpc_123');
 });
 
 test('portal: 502 when Stripe fails, 500 when not configured', async () => {
