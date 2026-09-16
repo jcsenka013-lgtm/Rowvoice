@@ -11,7 +11,7 @@ The latest code is already in your test Apps Script project.
 1. Open the test spreadsheet (its ID is `parentId` in `addon/.clasp.json`) and reload it.
 2. Go to **Extensions → Rowvoice → Open Rowvoice**. The permissions changed (`drive` → `drive.file`, plus send mail and openid), so Google asks you to approve them again.
 3. Work through the **Test checklist** in `README.md`.
-4. **Pro features before licensing exists.** `getPlan_` returns `free` while `LICENSE_API_BASE` is empty. To test emailing, set `EMAIL_IS_PRO_FEATURE = false` in `addon/License.js`, run `cd addon && clasp push`, and **set it back to `true` before release**.
+4. To try Pro features, upgrade with a Stripe test card (see step 4). No code changes needed.
 
 After any code change: `cd addon && clasp push`.
 
