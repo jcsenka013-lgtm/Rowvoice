@@ -23,7 +23,7 @@ These are the Phase 4 steps. They're all manual (Google Cloud console and Market
 | --- | --- |
 | User type | External |
 | App name | Rowvoice |
-| Support email | the support address used on the site |
+| Support email | `support@rowvoice.com` (must receive mail: Cloudflare Email Routing) |
 | App logo | 120×120 PNG: `docs/store-assets/oauth-logo-120.png` |
 | App domain / homepage | `https://rowvoice.com/` |
 | Privacy policy | `https://rowvoice.com/privacy` |
@@ -37,7 +37,7 @@ Scopes. These must match `addon/appsscript.json` exactly. Use these justificatio
 | `spreadsheets.currentonly` | Reads the header row and the rows the user selects in the spreadsheet where they opened the add-on, and writes the invoice number, status and PDF link back to those rows. |
 | `drive.file` | Creates a "Rowvoice" folder, saves generated invoice PDFs and the user's uploaded logo, and reads back only those app-created files. Has no access to any other Drive content. |
 | `script.container.ui` | Shows the add-on sidebar and the invoice preview dialog inside Google Sheets. |
-| `script.external_request` | Makes one HTTPS call to our license server to check whether the user has a Pro subscription. No spreadsheet data is sent. |
+| `script.external_request` | Calls the Google Drive REST API to save invoice PDFs, and our license server (api.rowvoice.com) to check the Pro subscription, count invoices for the free-plan limit and open the billing portal. No spreadsheet data is sent to our server. |
 | `script.send_mail` | Pro users can email an invoice PDF to the client listed in the row, from their own account, only when they click Create with "Email each invoice" ticked or click "Email selected". The add-on cannot read mail. |
 | `userinfo.email`, `openid` | Identifies the signed-in Google account to the license server with a Google-signed ID token, so a subscription is tied to the account that paid for it. |
 
@@ -75,12 +75,13 @@ Verification notes:
      >
      > • Works with the sheet you already have. It finds your header row and matches columns like Client, Total and Due date automatically.
      > • Starting from scratch? Insert a ready-made invoice sheet in one click.
-     > • Multiple line items per invoice, your logo, payment instructions and any currency.
-     > • Preview the invoice before creating it.
-     > • Create up to 25 invoices at once. Numbers are sequential and never duplicated.
+     > • Multiple line items, tax (VAT/GST/sales tax), discounts, notes, your logo and tax ID, in any currency.
+     > • Preview the invoice before creating it, and mark invoices Paid in one click.
+     > • Create up to 200 invoices at once. Numbers are sequential and never duplicated.
+     > • Pro: email each invoice to your client from your own Gmail, with the PDF attached.
      > • Private by design: it can only open the spreadsheet you use it in and the files it creates.
      >
-     > Free: 5 invoices a month. Pro: unlimited invoices and no footer, $6/month or $49/year.
+     > Free: 5 invoices a month. Pro: unlimited invoices, emailing and no footer, $6/month or $49/year.
 
    - Category: Business tools / Accounting & finance
    - Pricing: **Free with paid features**
