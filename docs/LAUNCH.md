@@ -20,7 +20,7 @@ After any code change: `cd addon && clasp push`.
 1. ~~Pick a domain and add it to Cloudflare.~~ Done: **rowvoice.com**. Both configs already use it: the license Worker is served at `api.rowvoice.com`, and the site at `rowvoice.com` and `www.rowvoice.com`. Deploying creates the DNS records and certificates.
 2. ✅ **Done:** the license Worker is deployed, and https://api.rowvoice.com/health returns `{"ok":true}`. Redeploy after config changes with `cd license-worker && npm run deploy`.
 3. ✅ **Done:** the site is live at https://rowvoice.com, www, `/privacy` and `/terms`, with security headers, robots.txt and a sitemap. Until launch, the install buttons are "Notify me" email links. Redeploy with `cd site && npx wrangler deploy`.
-4. **Email:** turn on **Cloudflare Email Routing** for rowvoice.com (free) and forward `support@rowvoice.com` to your inbox. The site and legal pages use that address.
+4. ✅ **Email:** Email Routing is on (MX, SPF and DKIM records added), and `support@rowvoice.com` forwards to your Gmail. **You:** click the verification link Cloudflare emailed to that Gmail address, or forwarding stays paused. It lives in the dashboard under **Compute & AI → Email Service → Email Routing**, or run `npx wrangler email routing rules list rowvoice.com`.
 
 ## 3. Connect the add-on to the Worker
 
