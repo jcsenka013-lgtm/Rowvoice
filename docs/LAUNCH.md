@@ -24,12 +24,18 @@ After any code change: `cd addon && clasp push`.
 
 ## 3. Connect the add-on to the Worker
 
-1. In `addon/License.js`, set `LICENSE_API_BASE = 'https://api.rowvoice.com'`. `appsscript.json` already allows it.
-2. Rename the Apps Script project to "Rowvoice" in the script editor (the title is only set there).
-3. Push the changes: `cd addon && clasp push`.
-4. Open the script editor with `clasp open-script`, then run `debugIdentityToken` and approve it. Copy the logged `aud`.
-5. Put the `aud` in `GOOGLE_CLIENT_IDS` in `license-worker/wrangler.jsonc`, then run `npm run deploy` again.
-6. Reload the sidebar. The usage box should still say "Free plan", and the Worker logs (`npm run tail`) should show no `Rejected ID token` warnings.
+1. ✅ **Done:** `LICENSE_API_BASE` is `https://api.rowvoice.com` and the add-on is pushed.
+2. **You:** open the test spreadsheet, reload it, and open **Extensions → Rowvoice → Open Rowvoice**. That's all. The Worker rejects the first request, because it doesn't know the add-on's client ID yet, and records the ID.
+3. Read the recorded ID and allow it:
+   ```sh
+   cd license-worker
+   npx wrangler kv key get --binding LICENSES --remote setup:unrecognized-audience
+   ```
+   Put the value in `GOOGLE_CLIENT_IDS` in `wrangler.jsonc`, then run `npm run deploy`.
+4. Reload the sidebar. It should still say "Free plan", and `npm run tail` should show no `Rejected ID token` warnings.
+5. Optional: rename the Apps Script project to "Rowvoice" in the script editor. The title can only be changed there, and users never see it.
+
+Fallback if nothing is recorded: in the script editor, run `debugIdentityToken` and copy the `aud` from the execution log.
 
 ## 4. Stripe (test mode first)
 

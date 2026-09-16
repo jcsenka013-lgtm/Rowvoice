@@ -18,7 +18,7 @@
  */
 
 var FREE_MONTHLY_LIMIT = 5;
-var LICENSE_API_BASE = ''; // 'https://api.rowvoice.com' once the license Worker is deployed
+var LICENSE_API_BASE = 'https://api.rowvoice.com';
 var UPGRADE_URLS = { monthly: '', yearly: '' };
 var EMAIL_IS_PRO_FEATURE = true;
 

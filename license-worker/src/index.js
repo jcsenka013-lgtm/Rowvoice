@@ -27,16 +27,26 @@ async function authenticate(request, env) {
   if (!match) return { response: json({ error: 'Missing bearer token' }, 401) };
 
   const audiences = allowedAudiences(env);
-  if (audiences.length === 0) {
-    console.error('GOOGLE_CLIENT_IDS is not configured');
-    return { response: json({ error: 'Server not configured' }, 500) };
-  }
+  if (audiences.length === 0) console.warn('GOOGLE_CLIENT_IDS is empty: every token is rejected until it is set');
   try {
     return await verifyGoogleIdToken(match[1], audiences);
   } catch (err) {
-    console.warn('Rejected ID token:', err.message);
+    console.warn('Rejected ID token:', err.message, err.audience || '');
+    if (err.audience) await rememberUnrecognizedAudience(env, err.audience);
     return { response: json({ error: 'Invalid token' }, 401) };
   }
+}
+
+/**
+ * Setup helper: remembers the audience of the last Google-signed token that wasn't allowed, so the
+ * add-on's OAuth client ID can be read with
+ *   npx wrangler kv key get --binding LICENSES --remote setup:unrecognized-audience
+ * instead of being copied out of the Apps Script editor. Written only when it changes.
+ */
+async function rememberUnrecognizedAudience(env, audience) {
+  const key = 'setup:unrecognized-audience';
+  if ((await env.LICENSES.get(key)) === audience) return;
+  await env.LICENSES.put(key, audience, { expirationTtl: 7 * 24 * 60 * 60 });
 }
 
 async function checkLicense(email, env) {

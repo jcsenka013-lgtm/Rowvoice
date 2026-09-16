@@ -106,9 +106,19 @@ test('check-license: rejects missing, forged, wrong-audience, expired and unveri
   assert.equal((await checkLicense(await idToken({}, { kid: 'unknown' }))).status, 401);
 });
 
-test('check-license: fails closed when no audience is configured', async () => {
+test('check-license: fails closed when no audience is configured, and records the audience for setup', async () => {
   env.GOOGLE_CLIENT_IDS = '';
-  assert.equal((await checkLicense(await idToken())).status, 500);
+  assert.equal((await checkLicense(await idToken({ aud: 'addon-client.apps.googleusercontent.com' }))).status, 401);
+  assert.equal(env.LICENSES.store.get('setup:unrecognized-audience'), 'addon-client.apps.googleusercontent.com');
+});
+
+test('forged tokens never write the setup audience', async () => {
+  const otherKeys = await crypto.subtle.generateKey(
+    { name: 'RSASSA-PKCS1-v1_5', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
+    true, ['sign', 'verify']
+  );
+  await checkLicense(await idToken({ aud: 'attacker' }, { privateKey: otherKeys.privateKey }));
+  assert.equal(env.LICENSES.store.has('setup:unrecognized-audience'), false);
 });
 
 test('JWKS is cached between requests', async () => {

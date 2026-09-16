@@ -36,7 +36,6 @@ async function getKeys(forceRefresh) {
  * Returns { email } for a valid token whose audience is one of `audiences`; throws otherwise.
  */
 export async function verifyGoogleIdToken(token, audiences, now = Date.now()) {
-  if (!audiences.length) throw new Error('No allowed audiences configured');
   const parts = String(token).split('.');
   if (parts.length !== 3) throw new Error('Malformed token');
   const [headerB64, payloadB64, signatureB64] = parts;
@@ -66,7 +65,12 @@ export async function verifyGoogleIdToken(token, audiences, now = Date.now()) {
   const claims = decodeJson(payloadB64);
   const nowSeconds = Math.floor(now / 1000);
   if (!ISSUERS.has(claims.iss)) throw new Error('Bad issuer');
-  if (!audiences.includes(claims.aud)) throw new Error('Bad audience');
+  if (!audiences.includes(claims.aud)) {
+    // Only reached with a genuine Google signature, so this is a real OAuth client ID (not secret).
+    const error = new Error('Bad audience');
+    error.audience = claims.aud;
+    throw error;
+  }
   if (typeof claims.exp !== 'number' || claims.exp + CLOCK_SKEW_SECONDS < nowSeconds) throw new Error('Token expired');
   if (typeof claims.iat === 'number' && claims.iat - CLOCK_SKEW_SECONDS > nowSeconds) throw new Error('Token from the future');
   if (!claims.email || !(claims.email_verified === true || claims.email_verified === 'true')) {
