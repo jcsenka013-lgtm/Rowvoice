@@ -15,7 +15,7 @@ addon/              Apps Script project (pushed with clasp)
   Mapping.js          header-row detection, fuzzy auto-mapping, per-sheet mapping that follows moved columns
   Money.js            locale-aware amount parsing/formatting, tax + discount totals
   Profile.js          business profile + logo (UserProperties)
-  Drive.js            DriveApp helpers (drive.file scope)
+  Drive.js            Drive v3 REST helpers (drive.file scope; DriveApp would need the restricted drive scope)
   Invoice.js          row -> HTML template -> PDF -> Drive -> write-back; chunked runs, email, mark paid, preview
   License.js          plan lookup (Google ID token -> license Worker), usage limit, billing portal
   Sidebar.html        sidebar UI
