@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  <style>
+    body { padding: 12px; }
+    details { border-bottom: 1px solid #e0e0e0; padding: 8px 0; }
+    details details { border: none; padding: 4px 0; }
+    summary { font-weight: bold; cursor: pointer; padding: 4px 0; }
+    .block { margin: 8px 0; }
+    label { display: block; margin-bottom: 2px; }
+    label.inline { display: flex; align-items: center; gap: 6px; }
+    input[type=text], select, textarea { width: 100%; box-sizing: border-box; }
+    textarea { height: 56px; }
+    textarea.tall { height: 110px; }
+    .hint { color: #666; font-size: 11px; margin-top: 4px; }
+    .row { display: flex; gap: 6px; align-items: flex-end; }
+    .row > * { flex: 1; min-width: 0; }
+    #status { margin-top: 10px; white-space: pre-line; }
+    #results a, #results div { display: block; margin-top: 2px; }
+    #results .sub { color: #666; font-size: 11px; margin: 0 0 4px 8px; }
+    .usage { background: #f1f3f4; padding: 8px; border-radius: 4px; margin-bottom: 8px; }
+    .usage a { margin-right: 8px; }
+    .usage .links { margin-top: 4px; }
+    .card { border: 1px solid #c6dafc; background: #e8f0fe; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+    .card strong { display: block; margin-bottom: 4px; }
+    .card button { margin: 8px 0 0; width: 100%; }
+    .notice { background: #fef7e0; border-radius: 4px; padding: 6px 8px; font-size: 11px; margin: 6px 0; }
+    .notice.warn { background: #fce8e6; color: #a50e0e; }
+    .linkish { background: none; border: none; color: #1a73e8; cursor: pointer; padding: 0; margin: 0; height: auto; min-width: 0; font-size: inherit; box-shadow: none; }
+    .linkish:hover { text-decoration: underline; box-shadow: none; }
+    .pro-tag { font-size: 10px; background: #e6f4ea; color: #137333; border-radius: 8px; padding: 0 6px; font-weight: bold; }
+    progress { width: 100%; height: 8px; margin-top: 8px; }
+    .secondary { margin-top: 6px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="usage" class="usage">Loading…</div>
+
+  <div id="quickstart" class="card hidden">
+    <strong>New here? Start in one click</strong>
+    <div class="hint">Adds a formatted "Invoices" tab with sample rows, already mapped. Or map your own sheet in step 2.</div>
+    <button class="action" id="insertStarter">Insert starter sheet</button>
+  </div>
+
+  <details id="profileSection">
+    <summary>1. Business profile</summary>
+    <div class="block"><label for="businessName">Business name *</label><input type="text" id="businessName"></div>
+    <div class="block"><label for="businessEmail">Business email</label><input type="text" id="businessEmail"></div>
+    <div class="block"><label for="address">Address</label><textarea id="address"></textarea></div>
+    <div class="block"><label for="taxId">Tax ID (VAT / GST / EIN)</label><input type="text" id="taxId"></div>
+    <div class="block row">
+      <div><label for="currency">Currency</label><input type="text" id="currency" maxlength="3"></div>
+      <div><label for="prefix">Number prefix</label><input type="text" id="prefix" maxlength="12"></div>
+    </div>
+    <div class="block">
+      <label for="numbering">Invoice numbers</label>
+      <select id="numbering">
+        <option value="spreadsheet">Separate sequence per spreadsheet</option>
+        <option value="account">One sequence across all my spreadsheets</option>
+      </select>
+      <div class="hint">Switching can repeat numbers already used in another spreadsheet. Change the prefix to be safe.</div>
+    </div>
+    <div class="block row">
+      <div><label for="taxLabel">Tax name</label><input type="text" id="taxLabel" maxlength="20" placeholder="Tax, VAT, GST"></div>
+      <div><label for="taxRate">Default rate %</label><input type="text" id="taxRate" placeholder="none"></div>
+    </div>
+    <div class="block"><label for="template">Template</label><select id="template"></select></div>
+    <div class="block">
+      <label for="paymentInstructions">Payment instructions</label>
+      <textarea id="paymentInstructions" placeholder="e.g. Pay by bank transfer to…"></textarea>
+    </div>
+    <div class="block">
+      <label for="logoInput">Logo (PNG/JPEG, under 300 KB)</label>
+      <div id="logoState" class="hint"></div>
+      <input type="file" id="logoInput" accept="image/png,image/jpeg">
+      <button id="removeLogo" style="display:none;">Remove logo</button>
+    </div>
+    <details>
+      <summary>Email template <span class="pro-tag">PRO</span></summary>
+      <div class="block"><label for="emailSubject">Subject</label><input type="text" id="emailSubject"></div>
+      <div class="block"><label for="emailMessage">Message</label><textarea id="emailMessage" class="tall"></textarea></div>
+      <div class="hint">Placeholders: {client} {number} {total} {dueDate} {business}. Sent from your Gmail with the PDF attached. Replies go to your business email.</div>
+    </details>
+    <button class="action" id="saveProfile">Save profile</button>
+  </details>
+
+  <details id="mappingSection">
+    <summary>2. Column mapping</summary>
+    <div class="hint">Sheet: <span id="sheetName"></span></div>
+    <div id="mappingWarning" class="notice warn hidden"></div>
+    <div id="movedNotice" class="notice hidden">Some columns moved. The mapping followed them automatically.</div>
+    <div class="block">
+      <label for="headerRow">Header row</label>
+      <select id="headerRow"></select>
+    </div>
+    <div id="autoNotice" class="notice hidden">Columns were matched automatically from your headers. Check them, then save.</div>
+    <div id="mappingFields"></div>
+    <div class="hint">Several items in one invoice: put one per line in the description cell as <code>Item | 120</code>.</div>
+    <div class="block">
+      <button class="action" id="saveMapping">Save mapping</button>
+      <button id="addOutputs">Add output columns</button>
+    </div>
+    <button id="refresh">Refresh headers</button>
+  </details>
+
+  <div class="block" style="margin-top: 14px;">
+    <div><strong>3. Create invoices</strong></div>
+    <div class="hint">Select one or more rows in the sheet, then click Create.</div>
+    <div class="block">
+      <label class="inline"><input type="checkbox" id="emailOnCreate"> Email each invoice to the client <span id="emailProTag" class="pro-tag">PRO</span></label>
+    </div>
+    <div class="block">
+      <button class="create" id="generate">Create invoice(s)</button>
+      <button id="preview">Preview</button>
+    </div>
+    <div class="secondary">
+      <button id="markPaid">Mark Paid</button>
+      <button id="emailSelected">Email selected</button>
+    </div>
+  </div>
+
+  <progress id="progress" class="hidden" value="0" max="1"></progress>
+  <div id="status"></div>
+  <div id="results"></div>
+
+  <script>
+    var state = null;
+    var busy = false;
+    var CHUNK_SIZE = 5; // rows per server call: keeps each call far below the 6-minute limit
+    var PROFILE_KEYS = ['businessName', 'businessEmail', 'address', 'taxId', 'currency', 'prefix', 'numbering',
+      'taxLabel', 'taxRate', 'template', 'paymentInstructions', 'emailSubject', 'emailMessage'];
+
+    function $(id) { return document.getElementById(id); }
+
+    function setStatus(message, isError) {
+      $('status').textContent = message || '';
+      $('status').className = isError ? 'error' : '';
+    }
+
+    function setBusy(isBusy) {
+      busy = isBusy;
+      Array.prototype.forEach.call(document.querySelectorAll('button, input, select, textarea'), function (el) {
+        el.disabled = isBusy;
+      });
+      if (!isBusy && state) applyPlanRestrictions();
+    }
+
+    function call(fnName, args, onSuccess, busyMessage, onFailure) {
+      setBusy(true);
+      setStatus(busyMessage || 'Working…');
+      var runner = google.script.run
+        .withSuccessHandler(function (result) { setBusy(false); setStatus(''); onSuccess(result); })
+        .withFailureHandler(function (err) {
+          setBusy(false);
+          setStatus(err.message || String(err), true);
+          if (onFailure) onFailure(err);
+        });
+      runner[fnName].apply(runner, args || []);
+    }
+
+    function link(text, href) {
+      var a = document.createElement('a');
+      a.href = href;
+      a.target = '_blank';
+      a.textContent = text;
+      return a;
+    }
+
+    function linkButton(text, onclick) {
+      var b = document.createElement('button');
+      b.className = 'linkish';
+      b.textContent = text;
+      b.onclick = onclick;
+      return b;
+    }
+
+    function renderUsage(usage) {
+      var el = $('usage');
+      el.textContent = '';
+      var links = document.createElement('div');
+      links.className = 'links';
+      if (usage.plan === 'pro') {
+        el.appendChild(document.createTextNode('Pro plan: unlimited invoices.'));
+        if (usage.licensingEnabled) links.appendChild(linkButton('Manage billing', openBillingPortal));
+      } else {
+        el.appendChild(document.createTextNode('Free plan: ' + usage.used + ' of ' + usage.limit + ' invoices used this month.'));
+        var upgrade = usage.upgrade || {};
+        if (upgrade.monthly) links.appendChild(link('Pro $6/mo', upgrade.monthly));
+        if (upgrade.yearly) links.appendChild(link('Pro $49/yr', upgrade.yearly));
+        if (usage.licensingEnabled) {
+          links.appendChild(linkButton('Already upgraded? Refresh', function () {
+            call('refreshPlan', [], function (u) {
+              state.usage = u;
+              renderUsage(u);
+              applyPlanRestrictions();
+              setStatus(u.plan === 'pro' ? 'Pro plan active. Thanks!' : 'Still on the free plan. Payments can take a minute to arrive.');
+            }, 'Checking your plan…');
+          }));
+        }
+      }
+      if (links.childNodes.length) el.appendChild(links);
+    }
+
+    function openBillingPortal() {
+      // Open the window during the click, or popup blockers will stop it after the async call.
+      var win = window.open('', '_blank');
+      call('getBillingPortalUrl', [], function (url) {
+        if (win) win.location.href = url;
+        else { $('results').textContent = ''; $('results').appendChild(link('Open billing portal', url)); }
+      }, 'Opening billing…', function () { if (win) win.close(); });
+    }
+
+    function applyPlanRestrictions() {
+      var canEmail = state.usage.canEmail;
+      $('emailProTag').classList.toggle('hidden', canEmail);
+      $('emailOnCreate').disabled = busy || !canEmail;
+      $('emailSelected').disabled = busy || !canEmail;
+      if (!canEmail) $('emailOnCreate').checked = false;
+    }
+
+    function renderProfile(profile) {
+      PROFILE_KEYS.forEach(function (key) { $(key).value = profile[key] || ''; });
+      $('logoState').textContent = profile.logoFileId ? 'Logo uploaded.' : 'No logo.';
+      $('removeLogo').style.display = profile.logoFileId ? '' : 'none';
+      $('logoInput').value = '';
+    }
+
+    function renderMapping() {
+      var headers = state.headers;
+      var mapping = state.mapping;
+
+      var headerRow = $('headerRow');
+      headerRow.textContent = '';
+      for (var r = 1; r <= Math.max(state.headerRowOptions, mapping.headerRow || 1); r++) {
+        headerRow.appendChild(new Option('Row ' + r, String(r)));
+      }
+      headerRow.value = String(mapping.headerRow || 1);
+
+      var anyMatched = state.fields.some(function (f) { return mapping[f.key]; });
+      $('autoNotice').classList.toggle('hidden', !(mapping.auto && anyMatched));
+      $('movedNotice').classList.toggle('hidden', !mapping.moved || !!mapping.missing);
+      var warning = $('mappingWarning');
+      warning.classList.toggle('hidden', !mapping.missing);
+      if (mapping.missing) {
+        warning.textContent = 'These columns were renamed or removed: ' + mapping.missing.map(function (m) {
+          return '"' + m.header + '" (' + m.label + ')';
+        }).join(', ') + '. Choose the right columns below and save. Invoices are paused until then.';
+      }
+
+      var container = $('mappingFields');
+      container.textContent = '';
+      state.fields.forEach(function (field) {
+        var wrap = document.createElement('div');
+        wrap.className = 'block';
+        var label = document.createElement('label');
+        label.textContent = field.label + (field.required ? ' *' : '');
+        label.htmlFor = 'map_' + field.key;
+        var select = document.createElement('select');
+        select.id = 'map_' + field.key;
+        select.appendChild(new Option('— not used —', ''));
+        headers.forEach(function (header, i) {
+          select.appendChild(new Option(columnLetter(i + 1) + ': ' + (header || '(blank)'), String(i + 1)));
+        });
+        select.value = mapping[field.key] ? String(mapping[field.key]) : '';
+        wrap.appendChild(label);
+        wrap.appendChild(select);
+        container.appendChild(wrap);
+      });
+    }
+
+    function columnLetter(n) {
+      var s = '';
+      while (n > 0) {
+        var m = (n - 1) % 26;
+        s = String.fromCharCode(65 + m) + s;
+        n = Math.floor((n - 1) / 26);
+      }
+      return s;
+    }
+
+    function render(newState) {
+      state = newState;
+      $('sheetName').textContent = state.sheetName;
+      var templateSelect = $('template');
+      templateSelect.textContent = '';
+      state.templates.forEach(function (t) { templateSelect.appendChild(new Option(t, t)); });
+      renderUsage(state.usage);
+      renderProfile(state.profile);
+      renderMapping();
+      applyPlanRestrictions();
+      $('quickstart').classList.toggle('hidden', state.mappingComplete);
+      // Open the first incomplete step. A detected-but-unsaved or broken mapping is worth a look.
+      $('profileSection').open = !state.profile.businessName;
+      $('mappingSection').open = !state.sheetIsEmpty &&
+        (!state.mappingComplete || !!state.mapping.auto || !!state.mapping.missing);
+    }
+
+    function load(message) {
+      call('getSidebarState', [], function (s) {
+        render(s);
+        if (message) setStatus(message);
+      }, 'Loading…');
+    }
+
+    /** Quiet refresh after actions: keeps status and results on screen. */
+    function refreshQuietly() {
+      google.script.run.withSuccessHandler(function (s) {
+        state = s;
+        renderUsage(s.usage);
+        renderMapping();
+        applyPlanRestrictions();
+        $('quickstart').classList.toggle('hidden', s.mappingComplete);
+      }).getSidebarState();
+    }
+
+    // Sidebars get no event when the user switches sheet tabs; check when the sidebar is used again.
+    var lastSheetCheck = 0;
+    function checkSheetChanged() {
+      if (busy || !state || Date.now() - lastSheetCheck < 2000) return;
+      lastSheetCheck = Date.now();
+      google.script.run.withSuccessHandler(function (sheetId) {
+        if (!busy && state && sheetId !== state.sheetId) load('Switched sheet tab. Mapping reloaded for this sheet.');
+      }).getActiveSheetId();
+    }
+    window.addEventListener('focus', checkSheetChanged);
+    document.addEventListener('mouseenter', checkSheetChanged);
+
+    function readMapping() {
+      var mapping = { headerRow: Number($('headerRow').value) || 1 };
+      state.fields.forEach(function (field) {
+        var value = $('map_' + field.key).value;
+        if (value) mapping[field.key] = Number(value);
+      });
+      return mapping;
+    }
+
+    function addResult(text, url, isError, detail) {
+      var line = url ? link(text, url) : document.createElement('div');
+      if (!url) line.textContent = text;
+      if (isError) line.className = 'error';
+      $('results').appendChild(line);
+      if (detail) {
+        var sub = document.createElement('div');
+        sub.className = 'sub' + (detail.isError ? ' error' : '');
+        sub.textContent = detail.text;
+        $('results').appendChild(sub);
+      }
+    }
+
+    $('insertStarter').onclick = function () {
+      call('insertStarterSheet', [], function (newState) {
+        render(newState);
+        $('mappingSection').open = false;
+        setStatus(newState.profile.businessName
+          ? 'Starter sheet added and row 2 selected. Click Create invoice(s).'
+          : 'Starter sheet added. Enter your business name, save, then click Create invoice(s).');
+        if (!newState.profile.businessName) $('businessName').focus();
+      }, 'Creating starter sheet…');
+    };
+
+    $('saveProfile').onclick = function () {
+      var profile = {};
+      PROFILE_KEYS.forEach(function (key) { profile[key] = $(key).value; });
+      call('saveProfile', [profile], function (saved) {
+        state.profile = saved;
+        renderProfile(saved);
+        setStatus('Profile saved.');
+      }, 'Saving…');
+    };
+
+    $('logoInput').onchange = function () {
+      var file = this.files[0];
+      if (!file) return;
+      if (file.size > 300 * 1024) { setStatus('Logo must be smaller than 300 KB.', true); return; }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var base64 = String(reader.result).split(',')[1];
+        call('uploadLogo', [base64, file.type], function (saved) {
+          state.profile = saved;
+          renderProfile(saved);
+          setStatus('Logo uploaded.');
+        }, 'Uploading logo…');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    $('removeLogo').onclick = function () {
+      call('removeLogo', [], function (saved) { state.profile = saved; renderProfile(saved); });
+    };
+
+    $('headerRow').onchange = function () {
+      call('setHeaderRow', [Number(this.value)], function (newState) {
+        render(newState);
+        $('mappingSection').open = true;
+        setStatus('Header row changed. Columns re-matched and saved.');
+      }, 'Reading headers…');
+    };
+
+    $('saveMapping').onclick = function () {
+      call('saveMapping', [readMapping()], function () {
+        load('Mapping saved.');
+      }, 'Saving…');
+    };
+
+    $('addOutputs').onclick = function () {
+      // Save current selections first so they aren't lost.
+      call('saveMapping', [readMapping()], function () {
+        call('addOutputColumns', [], function (result) {
+          state.headers = result.headers;
+          state.mapping = result.mapping;
+          renderMapping();
+          setStatus('Output columns added and mapped.');
+        });
+      });
+    };
+
+    $('refresh').onclick = function () { load(); };
+
+    $('preview').onclick = function () {
+      call('showInvoicePreview', [], function (p) {
+        setStatus('Row ' + p.row + ': ' + p.itemCount + ' item(s), total ' + p.totalText + '.');
+      }, 'Rendering preview…');
+    };
+
+    $('generate').onclick = function () {
+      if (!$('businessName').value.trim() || !state.profile.businessName) {
+        $('profileSection').open = true;
+        $('businessName').focus();
+        setStatus('Enter and save your business name first. It appears on every invoice.', true);
+        return;
+      }
+      var options = { email: $('emailOnCreate').checked };
+      $('results').textContent = '';
+      call('prepareInvoiceRun', [options], function (run) { processRun(run, options); }, 'Checking selection…');
+    };
+
+    /** Sends the run's rows in chunks so progress is visible and no call nears the time limit. */
+    function processRun(run, options) {
+      var total = run.rows.length;
+      var done = 0;
+      var created = 0;
+      var stoppedAt = -1;
+      setBusy(true);
+      $('progress').classList.remove('hidden');
+      $('progress').max = total;
+
+      function finish(errorMessage) {
+        setBusy(false);
+        $('progress').classList.add('hidden');
+        var summary = created + ' invoice(s) created.';
+        if (stoppedAt !== -1 && stoppedAt < total) summary += ' ' + (total - stoppedAt) + ' row(s) not processed.';
+        if (errorMessage) setStatus(errorMessage + '\n' + summary, true);
+        else setStatus(summary);
+        refreshQuietly();
+      }
+
+      function next() {
+        if (done >= total || stoppedAt !== -1) return finish();
+        var chunk = run.rows.slice(done, done + CHUNK_SIZE);
+        $('progress').value = done;
+        setStatus('Creating invoices… ' + done + ' of ' + total + ' done');
+        google.script.run
+          .withSuccessHandler(function (results) {
+            results.forEach(function (r) {
+              if (r.url) {
+                created++;
+                var detail = r.emailedTo ? { text: 'Emailed to ' + r.emailedTo }
+                  : r.emailError ? { text: 'Email not sent: ' + r.emailError, isError: true } : null;
+                addResult('Row ' + r.row + ': ' + r.invoiceNumber + ' (open PDF)', r.url, false, detail);
+              } else if (r.skipped) {
+                addResult('Row ' + r.row + ': skipped, already invoiced (' + r.invoiceNumber + ')');
+              } else {
+                addResult('Row ' + r.row + ': ' + r.error, null, true);
+              }
+            });
+            var last = results[results.length - 1];
+            done += chunk.length;
+            if (last && last.limitReached) stoppedAt = run.rows.indexOf(last.row) + 1;
+            next();
+          })
+          .withFailureHandler(function (err) {
+            finish((err.message || String(err)) + ' (stopped after ' + done + ' of ' + total + ' rows)');
+          })
+          .generateInvoicesForRows(run.sheetId, chunk, options);
+      }
+      next();
+    }
+
+    $('markPaid').onclick = function () {
+      call('markSelectedStatus', ['Paid'], function (r) {
+        setStatus(r.updated + ' row(s) marked Paid.' + (r.skipped ? ' ' + r.skipped + ' not invoiced yet, skipped.' : ''));
+      }, 'Updating…');
+    };
+
+    $('emailSelected').onclick = function () {
+      $('results').textContent = '';
+      call('emailSelectedInvoices', [], function (results) {
+        var sent = 0;
+        results.forEach(function (r) {
+          if (r.emailedTo) {
+            sent++;
+            addResult('Row ' + r.row + ': ' + r.invoiceNumber + ' emailed to ' + r.emailedTo);
+          } else {
+            addResult('Row ' + r.row + ': ' + r.error, null, true);
+          }
+        });
+        setStatus(sent + ' invoice email(s) sent.');
+      }, 'Sending emails…');
+    };
+
+    load();
+  </script>
+</body>
+</html>

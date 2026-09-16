@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sheetinvoice-license",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    // Create with: npx wrangler kv namespace create LICENSES   (then paste the id here)
+    { "binding": "LICENSES", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+  ],
+  "vars": {
+    // Comma-separated OAuth client IDs allowed as the ID token audience.
+    // Get it by running debugIdentityToken() in the Apps Script editor.
+    "GOOGLE_CLIENT_IDS": "",
+    // Where Stripe's billing portal sends users back to.
+    "PORTAL_RETURN_URL": "https://your-domain.example/"
+  }
+  // Secrets (not in this file):
+  //   npx wrangler secret put STRIPE_WEBHOOK_SECRET
+  //   npx wrangler secret put STRIPE_SECRET_KEY   (restricted key with billing portal write access is enough)
+}

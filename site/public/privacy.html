@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy | SheetInvoice</title>
+  <meta name="description" content="How the SheetInvoice Google Sheets add-on handles your data.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#188038"/><path d="M9 7h10l5 5v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" fill="#fff"/><path d="M19 7v5h5" fill="#cfe8d6"/><path d="M11 16h10M11 19.5h10M11 23h6" stroke="#188038" stroke-width="1.8" stroke-linecap="round"/></svg>
+        SheetInvoice
+      </a>
+      <nav class="nav" aria-label="Main"><a class="btn btn-primary btn-sm" href="MARKETPLACE_URL">Install free</a></nav>
+    </div>
+  </header>
+
+  <main class="wrap legal">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: September 16, 2026</p>
+
+    <p>SheetInvoice ("SheetInvoice", "we", "us") is a Google Sheets add-on that turns spreadsheet rows into PDF invoices. It is operated by <mark class="todo">[LEGAL NAME / COMPANY]</mark>. This policy explains what data the add-on and this website use, where that data goes, and the choices you have.</p>
+
+    <h2>The short version</h2>
+    <ul>
+      <li>Your spreadsheet data and invoices stay in your Google account. The add-on runs inside Google Apps Script, and PDFs are saved to your own Google Drive.</li>
+      <li>The only things that leave Google go to our license server: your Google account email (so we can tell whether you're on Pro) and a count of how many invoices you created this month.</li>
+      <li>We don't sell your data, use it for advertising, or use it to train AI models.</li>
+    </ul>
+
+    <h2>Data the add-on uses</h2>
+    <table>
+      <tr><th>Data</th><th>Why</th><th>Where it's stored</th></tr>
+      <tr>
+        <td>Contents of the spreadsheet you open SheetInvoice in: headers and the rows you select</td>
+        <td>To build invoices and write the invoice number, status and PDF link back to the sheet</td>
+        <td>Processed inside Google Apps Script. Never sent to us.</td>
+      </tr>
+      <tr>
+        <td>Business profile: name, email, address, tax ID, currency, tax rate, payment instructions, template, number prefix, email template</td>
+        <td>To show your details on invoices</td>
+        <td>Google Apps Script user properties, tied to your Google account</td>
+      </tr>
+      <tr>
+        <td>Column mapping and invoice counter (per spreadsheet, or per account if you choose one sequence across spreadsheets)</td>
+        <td>To remember your setup and number invoices in sequence</td>
+        <td>Google Apps Script document properties of that spreadsheet</td>
+      </tr>
+      <tr>
+        <td>Your logo and generated invoice PDFs</td>
+        <td>To put your logo on invoices and give you the PDF</td>
+        <td>A "SheetInvoice" folder in your Google Drive</td>
+      </tr>
+      <tr>
+        <td>Monthly invoice count</td>
+        <td>To apply the free plan limit</td>
+        <td>Google Apps Script user properties, and a count on our license server (a number per Google account per month, deleted automatically after about two months)</td>
+      </tr>
+      <tr>
+        <td>Client email address, invoice total, due date and PDF (Pro, only when you choose to email an invoice)</td>
+        <td>To send the invoice to your client</td>
+        <td>Sent through your own Gmail account by Google. Never sent to us. A note with the recipient and time is added to the row's Status cell.</td>
+      </tr>
+      <tr>
+        <td>Your Google account email address</td>
+        <td>To check your plan, and to fill in the email field at checkout if you upgrade</td>
+        <td>Sent to our license server (see below). Stored by us only if you buy Pro.</td>
+      </tr>
+    </table>
+
+    <h2>Google permissions (OAuth scopes)</h2>
+    <table>
+      <tr><th>Permission</th><th>What it lets SheetInvoice do</th></tr>
+      <tr><td>See, edit, create and delete only the specific Google Drive files you use with this app (<code>drive.file</code>)</td><td>Create the SheetInvoice folder, invoice PDFs and your logo. It can't see any other file in your Drive.</td></tr>
+      <tr><td>View and manage spreadsheets that this application has been installed in (<code>spreadsheets.currentonly</code>)</td><td>Read the rows you select and write back the invoice details, only in the spreadsheet where you open the add-on.</td></tr>
+      <tr><td>Display and run third-party web content in prompts and sidebars (<code>script.container.ui</code>)</td><td>Show the SheetInvoice sidebar and the invoice preview.</td></tr>
+      <tr><td>Connect to an external service (<code>script.external_request</code>)</td><td>Check your plan, count invoices for the free plan limit and open the billing portal, all through our license server.</td></tr>
+      <tr><td>Send email as you (<code>script.send_mail</code>)</td><td>Send an invoice to your client when you click "Email" (Pro). SheetInvoice cannot read your email.</td></tr>
+      <tr><td>See your primary Google Account email address and associate you with your personal info on Google (<code>userinfo.email</code>, <code>openid</code>)</td><td>Prove to our license server which Google account is asking, so nobody else can use or look up your plan.</td></tr>
+    </table>
+
+    <h2>The license check</h2>
+    <p>When the sidebar opens or you create an invoice, the add-on may send a Google-signed identity token to our license server. The token includes your Google account email and account ID. The server runs on Cloudflare Workers. It checks the token and replies "free" or "pro", along with your invoice count for the month. When you create an invoice, the add-on tells the server to add one to that count. The add-on caches the plan for up to a few hours. We don't send any spreadsheet contents, client details or invoice contents to the license server.</p>
+
+    <h2>Payments</h2>
+    <p>Stripe processes Pro subscriptions. When you check out, you give your payment details to Stripe, not to us. Stripe's privacy policy applies to them: <a href="https://stripe.com/privacy">stripe.com/privacy</a>. From Stripe we receive and keep these details, so we know your Google account has Pro:</p>
+    <ul>
+      <li>Your email address</li>
+      <li>Your Stripe customer and subscription IDs</li>
+      <li>Your subscription status and renewal date</li>
+    </ul>
+    <p>We never receive your card number. When you click "Manage billing", our server asks Stripe for a one-time link to Stripe's billing portal for your customer ID.</p>
+
+    <h2>Google API Services User Data Policy</h2>
+    <p>SheetInvoice's use and transfer of information received from Google APIs to any other app will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements. Specifically:</p>
+    <ul>
+      <li>We only use Google user data to provide and improve the invoicing features you see in the add-on.</li>
+      <li>We do not transfer it to others except as needed to provide those features, to comply with law, or as part of a merger or acquisition.</li>
+      <li>We do not use it for advertising.</li>
+      <li>We do not let humans read it unless you ask us to (for example, for support), it is needed for security or to comply with law, or it has been aggregated and anonymized.</li>
+    </ul>
+
+    <h2>Service providers</h2>
+    <ul>
+      <li><strong>Google</strong> runs the add-on (Apps Script) and stores your data in your account (Drive and script properties).</li>
+      <li><strong>Cloudflare</strong> hosts the license server and this website. Cloudflare may process technical request data such as IP addresses and timestamps, and keeps short-term logs.</li>
+      <li><strong>Stripe</strong> processes payments.</li>
+    </ul>
+
+    <h2>This website</h2>
+    <p>This website doesn't use cookies, analytics or tracking scripts.</p>
+
+    <h2>Retention and deletion</h2>
+    <ul>
+      <li><strong>Data in your Google account.</strong> You control it. Delete the "SheetInvoice" folder in Drive to remove PDFs and your logo. To remove stored settings, uninstall the add-on, or remove its access at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li>
+      <li><strong>Subscription records.</strong> We keep them while your subscription is active and for as long as tax and accounting law requires after that.</li>
+      <li><strong>Other requests.</strong> Email us to ask for a copy of what we hold, or for deletion where the law allows.</li>
+    </ul>
+
+    <h2>Security</h2>
+    <p>Everything sent between the add-on, our license server and Stripe is encrypted in transit (HTTPS). The license server only accepts identity tokens signed by Google, and it only accepts payment events with a valid Stripe signature.</p>
+
+    <h2>Children</h2>
+    <p>SheetInvoice is a business tool and isn't directed at children under 13, or under 16 in the EEA and UK.</p>
+
+    <h2>Your rights</h2>
+    <p>Depending on where you live, you may have the right to access, correct, delete or export your personal data, and to object to or restrict how it's processed. To use any of these rights, contact us at the address below. You can also complain to your local data protection authority.</p>
+
+    <h2>Changes</h2>
+    <p>If we change this policy, we'll update the date above. If the change is significant, for example new data use, we'll say so in the add-on before it takes effect.</p>
+
+    <h2>Contact</h2>
+    <p><mark class="todo">[LEGAL NAME / COMPANY]</mark>, <mark class="todo">[POSTAL ADDRESS]</mark><br>
+    Email: <a href="mailto:CONTACT_EMAIL"><mark class="todo">CONTACT_EMAIL</mark></a></p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© 2026 SheetInvoice</span>
+      <nav aria-label="Footer"><a href="/">Home</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Helvetica, Arial, sans-serif; font-size: 10.5pt; color: #1f2933; margin: 0; }
+    table { width: 100%; border-collapse: collapse; }
+    .band { background: #1e3a5f; color: #ffffff; padding: 28px 36px; }
+    .band .muted { color: #c8d6e5; }
+    .content { padding: 28px 36px; }
+    .title { font-size: 22pt; font-weight: bold; }
+    .label { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1px; color: #7b8794; margin-bottom: 4px; }
+    .items { margin-top: 24px; }
+    .items th { background: #f0f4f8; text-align: left; padding: 9px 8px; font-size: 9pt; text-transform: uppercase; color: #52606d; }
+    .items td { padding: 9px 8px; border-bottom: 1px solid #e4e7eb; vertical-align: top; }
+    .amount, .items th.amount { text-align: right; white-space: nowrap; }
+    .sub td { color: #52606d; padding: 6px 8px; }
+    .total { background: #1e3a5f; color: #ffffff; font-size: 13pt; font-weight: bold; }
+    .total td { border-bottom: none; padding: 12px 8px; }
+    .footer { margin-top: 40px; font-size: 8pt; color: #9aa5b1; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="band">
+    <table>
+      <tr>
+        <td style="vertical-align: middle;">
+          <? if (logo) { ?><img src="<?!= logo ?>" style="max-height: 56px; max-width: 180px;"><br><? } ?>
+          <span class="title"><?= profile.businessName ?></span>
+        </td>
+        <td style="vertical-align: middle; text-align: right;">
+          <span class="title">Invoice</span><br>
+          <span class="muted"><?= invoice.number ?></span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="content">
+    <table>
+      <tr>
+        <td style="vertical-align: top; width: 40%;">
+          <div class="label">Bill to</div>
+          <strong><?= invoice.clientName ?></strong>
+          <? if (invoice.clientAddress) { ?><br><?!= nl2br_(invoice.clientAddress) ?><? } ?>
+          <? if (invoice.clientEmail) { ?><br><?= invoice.clientEmail ?><? } ?>
+        </td>
+        <td style="vertical-align: top; width: 30%;">
+          <div class="label">From</div>
+          <?!= nl2br_(profile.address) ?>
+          <? if (profile.businessEmail) { ?><br><?= profile.businessEmail ?><? } ?>
+          <? if (profile.taxId) { ?><br>Tax ID: <?= profile.taxId ?><? } ?>
+        </td>
+        <td style="vertical-align: top; text-align: right;">
+          <div class="label">Issued</div>
+          <?= invoice.issueDate ?>
+          <? if (invoice.dueDate) { ?>
+          <div class="label" style="margin-top: 10px;">Due</div>
+          <?= invoice.dueDate ?>
+          <? } ?>
+        </td>
+      </tr>
+    </table>
+
+    <table class="items">
+      <tr><th>Description</th><th class="amount">Amount</th></tr>
+      <? for (var i = 0; i < invoice.items.length; i++) { ?>
+      <tr>
+        <td><?!= nl2br_(invoice.items[i].description) ?></td>
+        <td class="amount"><?= invoice.items[i].amountText ?></td>
+      </tr>
+      <? } ?>
+      <? if (invoice.showSubtotal) { ?>
+      <tr class="sub"><td>Subtotal</td><td class="amount"><?= invoice.subtotalText ?></td></tr>
+      <? if (invoice.discountText) { ?><tr class="sub"><td>Discount</td><td class="amount"><?= invoice.discountText ?></td></tr><? } ?>
+      <? if (invoice.taxText) { ?><tr class="sub"><td><?= invoice.taxLabel ?></td><td class="amount"><?= invoice.taxText ?></td></tr><? } ?>
+      <? } ?>
+      <tr class="total"><td>Total due</td><td class="amount"><?= invoice.totalText ?></td></tr>
+    </table>
+
+    <? if (invoice.notes) { ?>
+    <div style="margin-top: 28px;">
+      <div class="label">Notes</div>
+      <?!= nl2br_(invoice.notes) ?>
+    </div>
+    <? } ?>
+
+    <? if (profile.paymentInstructions) { ?>
+    <div style="margin-top: 32px;">
+      <div class="label">Payment instructions</div>
+      <?!= nl2br_(profile.paymentInstructions) ?>
+    </div>
+    <? } ?>
+
+    <? if (showFooter) { ?><div class="footer">Made with SheetInvoice</div><? } ?>
+  </div>
+</body>
+</html>
