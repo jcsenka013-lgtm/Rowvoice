@@ -92,7 +92,7 @@ Status legend: `[x]` built and unit-tested where possible · `[~]` built, needs 
 ## Phase 4: Google Workspace Marketplace Publishing
 **Goal:** Distribute the add-on globally. (Note: These steps require manual developer action in the Google Cloud Console.)
 
-Step-by-step guide with scope justifications and listing copy: **`docs/PUBLISHING.md`**.
+Step-by-step guide with scope justifications and listing copy: **`docs/PUBLISHING.md`**. Everything that needs your accounts, in order: **`docs/LAUNCH.md`**. Store icons and banner: `docs/store-assets/`.
 
 - [ ] **Standard GCP Project Creation**
   - Create a standard Google Cloud Project and link it to the Apps Script project via Project Settings. (This changes the ID token audience. Update `GOOGLE_CLIENT_IDS`.)

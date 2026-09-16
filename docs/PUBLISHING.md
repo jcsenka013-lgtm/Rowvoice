@@ -24,7 +24,7 @@ These are the Phase 4 steps. They're all manual (Google Cloud console and Market
 | User type | External |
 | App name | SheetInvoice |
 | Support email | the support address used on the site |
-| App logo | 120×120 PNG |
+| App logo | 120×120 PNG: `docs/store-assets/oauth-logo-120.png` |
 | App domain / homepage | `https://<your-domain>/` |
 | Privacy policy | `https://<your-domain>/privacy.html` |
 | Terms of service | `https://<your-domain>/terms.html` |
@@ -88,8 +88,8 @@ Verification notes:
 
    | Asset | Size | Source |
    | --- | --- | --- |
-   | Application icons | 32×32, 48×48, 96×96, 128×128 PNG | Export `site/public/favicon.svg` |
-   | Card banner | 220×140 PNG | |
+   | Application icons | 32×32, 48×48, 96×96, 128×128 PNG | `docs/store-assets/icon-*.png` |
+   | Card banner | 220×140 PNG | `docs/store-assets/card-banner-220x140.png` |
    | Screenshots | 1280×800 PNG, 1–5 | Take 3, listed below |
 
    Screenshots:

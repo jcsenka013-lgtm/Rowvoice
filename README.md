@@ -22,7 +22,9 @@ addon/              Apps Script project (pushed with clasp)
   templates/          Classic.html, Modern.html
 license-worker/     Cloudflare Worker + KV, Stripe webhook (see its README)
 site/               landing page, privacy policy, terms (static; Cloudflare static assets)
+docs/LAUNCH.md      ordered launch checklist (accounts, deploys, Stripe, verification)
 docs/PUBLISHING.md  OAuth verification + Marketplace checklist and listing copy
+docs/store-assets/  Marketplace/OAuth icons + banner (render.mjs regenerates them)
 tests/              Node unit tests for the add-on's pure logic
 ```
 
