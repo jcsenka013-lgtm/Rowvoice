@@ -39,6 +39,7 @@ Run every test with `npm test` from the repo root. It needs Node 20+ and nothing
    cd addon
    clasp create --type sheets --title "SheetInvoice" --parentId <SPREADSHEET_ID> --rootDir .
    ```
+   This writes `addon/.clasp.json`, which is gitignored because it binds to your own script. To reuse an existing script instead, copy `.clasp.json.example` and fill in the IDs.
    If clasp asks to overwrite local files, answer **no**. Then check that `appsscript.json` still lists the seven scopes.
 6. `clasp push` (use `clasp push --watch` while developing)
 

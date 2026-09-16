@@ -3,3 +3,5 @@ node_modules/
 .dev.vars
 .env
 .clasprc.json
+# clasp project binding (script + spreadsheet IDs are per developer); copy from .clasp.json.example
+addon/.clasp.json
