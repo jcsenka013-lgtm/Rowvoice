@@ -26,6 +26,8 @@ Everything you need, ready to use, for the Google steps that need your login: Se
 
 ## 2. Standard Google Cloud project (10 minutes)
 
+> ✅ **Done 2026-09-18.** `rowvoice-prod` (386477128189) is linked, a basic consent screen exists, and the new client ID is allowed on the Worker. Billing portal verified.
+
 1. Go to https://console.cloud.google.com, open the project dropdown, click **New project**, name it `rowvoice-prod` and click Create.
 2. On the project dashboard, copy the **Project number** (digits only). Rowvoice's is `386477128189`.
 3. **Create a basic consent screen first.** Apps Script refuses to link a project without one. Go to **Google Auth Platform → Get started**:
