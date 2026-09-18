@@ -4,6 +4,8 @@ These are the steps that need your accounts or a browser, in dependency order. E
 
 Every command runs from the repo root unless it says otherwise.
 
+> **Where things stand (2026-09-18):** steps 1–4 are done, and the business paperwork is in progress (see `docs/BUSINESS_SETUP.md`). Legal pages are complete, a support page is live, and the Marketplace beta deployment exists. **Next: `docs/VERIFICATION_KIT.md`**, which covers Search Console, the GCP project, the consent screen, the demo video, screenshots and the Marketplace SDK, with every value filled in.
+
 ## 1. Test the add-on (now)
 
 The latest code is already in your test Apps Script project.
