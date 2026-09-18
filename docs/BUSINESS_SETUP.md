@@ -4,6 +4,25 @@ Plan: run Rowvoice as a trade name (DBA) of the existing Oklahoma LLC, **Capture
 
 Researched September 2026 from official sources, linked below. This is not legal or tax advice. A 30-minute call with your accountant is worth it before taking live payments.
 
+## Status (2026-09-18)
+
+| Item | Status |
+| --- | --- |
+| LLC | ✅ **CAPTURES BY JC LLC**, Oklahoma, filed 2026-12-30. **First annual certificate ($25) due 2026-12-30.** |
+| Legal pages | ✅ Live: "a product of CAPTURES BY JC LLC", Oklahoma law, 30-day money-back guarantee, email-only contact |
+| EIN | ❓ Confirm the LLC has one (step 3) |
+| Trade name "Rowvoice" | ⬜ Not filed (step 2). After filing, tell Claude to switch the pages to "d/b/a Rowvoice". |
+| Business bank account | ⬜ None yet (step 4) |
+| Public mailing address | Not needed for now. The pages list email only. Get a PO box before sending any marketing email, which must show a postal address. |
+
+## Refund policy (chosen 2026-09-18)
+
+- **30-day money-back guarantee** on the first payment, monthly or yearly, with no reason needed.
+- **Forgot to cancel a yearly plan?** Full refund within 14 days of the renewal charge.
+- **Otherwise:** no partial refunds, but Pro stays active until the end of the paid period.
+
+Why: Invoice Ninja, the closest invoicing competitor with a published policy, offers 30 days, and small-SaaS guidance is 14–30 days. At $6–$49, a refund is cheaper than a chargeback (Stripe charges a dispute fee on top of the reversed payment). Rowvoice also has a free plan, so people can try it before paying. The policy lives in `site/public/terms.html`.
+
 ## Checklist, in order
 
 ### 1. Confirm the LLC is in good standing (free, 5 minutes)
@@ -27,11 +46,20 @@ Researched September 2026 from official sources, linked below. This is not legal
   - It does **not** give exclusive rights to the name (that's what a trademark does, see step 8), and it doesn't create a new company.
 - **Keep the filed copy.** Your bank and Stripe will ask for it as the "DBA statement".
 
-### 3. EIN: nothing to do
-The LLC keeps its current EIN. The IRS doesn't require a new EIN for a trade name: [When to get a new EIN](https://www.irs.gov/businesses/small-businesses-self-employed/when-to-get-a-new-ein).
+### 3. EIN
+If the LLC doesn't have an EIN yet, get one **free** at [irs.gov/ein](https://www.irs.gov/businesses/small-businesses-self-employed/employer-identification-number). It takes about 10 minutes online, and **avoid paid "EIN services"**. Banks and Stripe both need it for an LLC. Save the confirmation letter (CP 575). A trade name doesn't need its own EIN. The IRS doesn't require a new EIN for a trade name: [When to get a new EIN](https://www.irs.gov/businesses/small-businesses-self-employed/when-to-get-a-new-ein).
 
 ### 4. Banking
-- Open a separate account for Rowvoice, or add "Rowvoice" as a DBA on an LLC account, using the filed trade name report.
+- **What banks ask an LLC for:**
+  - The EIN confirmation letter
+  - Articles of Organization, from your sos.ok.gov account
+  - An operating agreement. Write a one-page single-member one if you don't have it; templates are free.
+  - Your photo ID
+  - The filed trade name report, if the account should also accept "Rowvoice"
+- **Options:**
+  - A local bank or credit union
+  - An online business bank. Mercury, Relay and Bluevine are common with Stripe, and usually have no monthly fee or minimum balance.
+- **Simplest setup:** one LLC checking account for now, with "Rowvoice" added as a DBA once the trade name is filed. Add a second account, or a sub-account (Relay and Mercury offer them free), if you want photography and Rowvoice money apart.
 - **Stripe requires the payout account to be in the LLC's legal name or its DBA.**
 - Keeping Rowvoice money separate from the photography business makes taxes, and the liability protection, much cleaner.
 
