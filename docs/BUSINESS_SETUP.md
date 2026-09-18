@@ -11,7 +11,7 @@ Researched September 2026 from official sources, linked below. This is not legal
 | LLC | ✅ **CAPTURES BY JC LLC**, Oklahoma, formed 2025-12-30. **First annual certificate ($25) due 2026-12-30.** |
 | Legal pages | ✅ Live: "a product of CAPTURES BY JC LLC", Oklahoma law, 30-day money-back guarantee, email-only contact |
 | EIN | ❓ Confirm the LLC has one (step 3) |
-| Trade name "Rowvoice" | ⬜ Not filed (step 2). After filing, tell Claude to switch the pages to "d/b/a Rowvoice". |
+| Trade name "Rowvoice" | ⏳ **Submitted 2026-09-18**, awaiting processing (document 78555660003, session 091826NCOYKM). When the SOS emails: pay any balance in the Briefcase, download the filed report, then tell Claude to switch the pages to "d/b/a Rowvoice". |
 | Business bank account | ⬜ None yet (step 4) |
 | Public mailing address | Not needed for now. The pages list email only. Get a PO box before sending any marketing email, which must show a postal address. |
 
