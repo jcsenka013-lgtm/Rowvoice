@@ -1,6 +1,9 @@
 {
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "name": "rowvoice-site",
+  // Rowvoice lives in the jcsenka013@gmail.com Cloudflare account. Pinned so a deploy while logged in
+  // to another account fails instead of creating copies there.
+  "account_id": "76e22566b7b6d6f06bd34e2732e1cc0f",
   "compatibility_date": "2026-09-01",
   "routes": [
     { "pattern": "rowvoice.com", "custom_domain": true },
