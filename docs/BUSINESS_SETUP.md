@@ -8,7 +8,7 @@ Researched September 2026 from official sources, linked below. This is not legal
 
 | Item | Status |
 | --- | --- |
-| LLC | ✅ **CAPTURES BY JC LLC**, Oklahoma, filed 2026-12-30. **First annual certificate ($25) due 2026-12-30.** |
+| LLC | ✅ **CAPTURES BY JC LLC**, Oklahoma, formed 2025-12-30. **First annual certificate ($25) due 2026-12-30.** |
 | Legal pages | ✅ Live: "a product of CAPTURES BY JC LLC", Oklahoma law, 30-day money-back guarantee, email-only contact |
 | EIN | ❓ Confirm the LLC has one (step 3) |
 | Trade name "Rowvoice" | ⬜ Not filed (step 2). After filing, tell Claude to switch the pages to "d/b/a Rowvoice". |
@@ -47,7 +47,7 @@ Why: Invoice Ninja, the closest invoicing competitor with a published policy, of
 - **Keep the filed copy.** Your bank and Stripe will ask for it as the "DBA statement".
 
 ### 3. EIN
-If the LLC doesn't have an EIN yet, get one **free** at [irs.gov/ein](https://www.irs.gov/businesses/small-businesses-self-employed/employer-identification-number). It takes about 10 minutes online, and **avoid paid "EIN services"**. Banks and Stripe both need it for an LLC. Save the confirmation letter (CP 575). A trade name doesn't need its own EIN. The IRS doesn't require a new EIN for a trade name: [When to get a new EIN](https://www.irs.gov/businesses/small-businesses-self-employed/when-to-get-a-new-ein).
+If the LLC doesn't have an EIN yet, get one **free** at [irs.gov/ein](https://www.irs.gov/businesses/small-businesses-self-employed/employer-identification-number). It takes about 10 minutes online, and **avoid paid "EIN services"**. Banks and Stripe both need it for an LLC. Save the confirmation letter (CP 575). A trade name doesn't need its own EIN: [When to get a new EIN](https://www.irs.gov/businesses/small-businesses-self-employed/when-to-get-a-new-ein).
 
 ### 4. Banking
 - **What banks ask an LLC for:**
