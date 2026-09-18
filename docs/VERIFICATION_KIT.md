@@ -27,9 +27,17 @@ Everything you need, ready to use, for the Google steps that need your login: Se
 ## 2. Standard Google Cloud project (10 minutes)
 
 1. Go to https://console.cloud.google.com, open the project dropdown, click **New project**, name it `rowvoice-prod` and click Create.
-2. On the project dashboard, copy the **Project number** (digits only).
-3. Open the script with `cd addon && clasp open-script`. Go to **Project Settings (gear) → Google Cloud Platform (GCP) Project → Change project**, paste the number and click **Set project**.
-4. **This changes the add-on's Google client ID.** Open the Rowvoice sidebar in the test spreadsheet once, then tell Claude. Claude reads the new ID from the Worker and adds it, the same way as before. Until then, the sidebar shows the Free plan.
+2. On the project dashboard, copy the **Project number** (digits only). Rowvoice's is `386477128189`.
+3. **Create a basic consent screen first.** Apps Script refuses to link a project without one. Go to **Google Auth Platform → Get started**:
+   - App name `Rowvoice`
+   - Support email: your Gmail (the list only offers accounts you own)
+   - Audience **External**
+   - Contact email: your Gmail
+   - Tick the policy box and click **Create**
+
+   Then go to **Audience → Test users** and add your Gmail and any beta testers. While the app is in *Testing*, only listed test users can authorize it.
+4. Open the script with `cd addon && clasp open-script`. Go to **Project Settings (gear) → Google Cloud Platform (GCP) Project → Change project**, paste the number and click **Set project**.
+5. **This changes the add-on's Google client ID.** Open the Rowvoice sidebar in the test spreadsheet once, then tell Claude. Claude reads the new ID from the Worker and adds it, the same way as before. Until then, the sidebar shows the Free plan.
 
 ## 3. OAuth consent screen (15 minutes)
 
