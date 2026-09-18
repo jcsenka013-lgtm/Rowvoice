@@ -4,7 +4,19 @@ These are the steps that need your accounts or a browser, in dependency order. E
 
 Every command runs from the repo root unless it says otherwise.
 
-> **Where things stand (2026-09-18):** steps 1–4 are done, and the business paperwork is in progress (see `docs/BUSINESS_SETUP.md`). Legal pages are complete, a support page is live, and the Marketplace beta deployment exists. **Next: `docs/VERIFICATION_KIT.md`**, which covers Search Console, the GCP project, the consent screen, the demo video, screenshots and the Marketplace SDK, with every value filled in.
+> **▶ Resume here (updated 2026-09-18).**
+> - **Done:**
+>   - Add-on, license Worker, site, Stripe (test mode), email routing and legal pages
+>   - GCP project `rowvoice-prod` (386477128189) linked, with its client ID allowed on the Worker
+>   - Consent screen scopes and branding entered
+>   - Marketplace beta deployment created
+> - **Next** (all in `docs/VERIFICATION_KIT.md`):
+>   1. Confirm Search Console has verified rowvoice.com
+>   2. Record the demo video (step 4), upload it unlisted, and submit the consent screen for verification
+>   3. Set up the Marketplace SDK as private beta (step 6)
+>   4. Take screenshots (step 5)
+> - **Waiting on paperwork** (`docs/BUSINESS_SETUP.md`): trade name approval (then tell Claude to switch the site to "d/b/a Rowvoice"), EIN letter, bank account, then Stripe live mode (LAUNCH step 8).
+> - **On a new computer:** see "New machine setup" below.
 
 ## 1. Test the add-on (now)
 
@@ -88,3 +100,14 @@ Fastest path: run `STRIPE_API_KEY=<live secret key> node scripts/stripe-setup.mj
 4. Make one real purchase and refund it.
 
 To regenerate the store images after a logo change: `node docs/store-assets/render.mjs`.
+
+## New machine setup
+
+1. Install Node.js 22 and Git, then run `npm i -g @google/clasp`.
+2. `git clone https://github.com/jcsenka013-lgtm/Rowvoice.git && cd Rowvoice && npm test`
+3. Copy `addon/.clasp.json.example` to `addon/.clasp.json`, and set:
+   - `scriptId`: `1763K4Bk0zqXACOpjcfARPM8qlEAhwXr9L4v3_CzWyvBTExW-VQs212ag`
+   - `parentId`: `1WrUT0jjypLAuwIuSwPFM4pu3kvgioT30wi9yZ7y1pGA`
+4. Run `clasp login`, then `cd license-worker && npm install && npx wrangler login`. Sign in with **jcsenka013@gmail.com**; both wrangler configs are pinned to that Cloudflare account.
+5. `.env` (Stripe test keys) isn't in Git, and you only need it to rerun `stripe-setup.mjs`. Get the keys from the Stripe dashboard if needed.
+6. Tell Claude on the new machine: "This is Rowvoice (renamed from SheetInvoice). Read docs/LAUNCH.md 'Resume here' first."

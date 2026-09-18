@@ -43,6 +43,8 @@ Everything you need, ready to use, for the Google steps that need your login: Se
 
 ## 3. OAuth consent screen (15 minutes)
 
+> ✅ **Scopes and branding entered (2026-09-18).** Before submitting: check that none of the scopes show under *restricted*, and that Search Console has verified rowvoice.com (step 1), because the authorized domain needs it. Then do the demo video (step 4) and submit.
+
 In the Cloud console for `rowvoice-prod`, open **Google Auth Platform** (called **APIs & Services → OAuth consent screen** in older consoles).
 - **Branding:**
   - App name `Rowvoice`
