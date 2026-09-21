@@ -19,10 +19,10 @@
 
 var FREE_MONTHLY_LIMIT = 5;
 var LICENSE_API_BASE = 'https://api.rowvoice.com';
-// Stripe Payment Links (TEST mode, created by license-worker/scripts/stripe-setup.mjs). Replace with live links at launch.
+// Stripe Payment Links (LIVE mode, created for launch).
 var UPGRADE_URLS = {
-  monthly: 'https://buy.stripe.com/test_bJefZg0Te5WzaBvctF97G00',
-  yearly: 'https://buy.stripe.com/test_6oU00i9pK4SvcJDctF97G01'
+  monthly: 'https://buy.stripe.com/28E28r2rgdjyb2a3852sM02',
+  yearly: 'https://buy.stripe.com/dRm7sL4zo6VafiqbEB2sM00'
 };
 var EMAIL_IS_PRO_FEATURE = true;
 
