@@ -4,18 +4,20 @@ These are the steps that need your accounts or a browser, in dependency order. E
 
 Every command runs from the repo root unless it says otherwise.
 
-> **▶ Resume here (updated 2026-09-18).**
+> **▶ Resume here (updated 2026-09-21).**
 > - **Done:**
 >   - Add-on, license Worker, site, Stripe (test mode), email routing and legal pages
 >   - GCP project `rowvoice-prod` (386477128189) linked, with its client ID allowed on the Worker
 >   - Consent screen scopes and branding entered
 >   - Marketplace beta deployment created
+>   - Stripe live Payment Links (`UPGRADE_URLS` in `addon/License.js`) and the live customer portal configuration (`PORTAL_CONFIGURATION_ID` in `license-worker/wrangler.jsonc`) are wired
 > - **Next** (all in `docs/VERIFICATION_KIT.md`):
 >   1. Confirm Search Console has verified rowvoice.com
 >   2. Record the demo video (step 4), upload it unlisted, and submit the consent screen for verification
 >   3. Set up the Marketplace SDK as private beta (step 6)
 >   4. Take screenshots (step 5)
-> - **Waiting on paperwork** (`docs/BUSINESS_SETUP.md`): trade name approval (then tell Claude to switch the site to "d/b/a Rowvoice"), EIN letter, bank account, then Stripe live mode (LAUNCH step 8).
+> - **Stripe live secrets still needed:** from `license-worker/`, run `npx wrangler secret put STRIPE_SECRET_KEY` and `npx wrangler secret put STRIPE_WEBHOOK_SECRET` with the live restricted key and the live webhook signing secret. Those values stay out of the repo. Then deploy the Worker and `clasp push` (LAUNCH step 8).
+> - **Waiting on paperwork** (`docs/BUSINESS_SETUP.md`): trade name approval (then tell Claude to switch the site to "d/b/a Rowvoice"), EIN letter, bank account.
 > - **On a new computer:** see "New machine setup" below.
 
 ## 1. Test the add-on (now)

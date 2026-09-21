@@ -29,8 +29,8 @@
 		"GOOGLE_CLIENT_IDS": "386477128189-2dk3baib3a1ln2c9l2l5jstv60db079r.apps.googleusercontent.com,148675355160-rcolcj6v180gul3tgorleplqqmbcski9.apps.googleusercontent.com",
 		// Where Stripe's billing portal sends users back to.
 		"PORTAL_RETURN_URL": "https://rowvoice.com/",
-		// Stripe customer portal configuration (TEST mode), from scripts/stripe-setup.mjs.
-		"PORTAL_CONFIGURATION_ID": "bpc_1UGQtDCgmPZGfyMpeTX2HMED"
+		// Stripe customer portal configuration (LIVE mode, created for launch).
+		"PORTAL_CONFIGURATION_ID": "bpc_1UIB9SEG42DmppHvodSPp0tV"
 	}
 	// Secrets (not in this file):
 	//   npx wrangler secret put STRIPE_WEBHOOK_SECRET
