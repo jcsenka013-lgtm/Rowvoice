@@ -1,0 +1,21 @@
+# Operator notes (local only)
+
+Copy this file to `docs/OPERATOR_NOTES.md`. That copy is gitignored.
+
+Do not commit real script IDs, spreadsheet IDs, deployment IDs, personal emails, tax IDs, bank details, or filing numbers.
+
+## Apps Script
+
+- scriptId: YOUR_SCRIPT_ID
+- parentId (test spreadsheet): YOUR_SPREADSHEET_ID
+- Marketplace deployment ID: YOUR_DEPLOYMENT_ID
+
+## Accounts
+
+- Google account that owns the Cloud project: you@example.com
+- Cloudflare account: the account that owns rowvoice.com (see `account_id` in the wrangler configs)
+- GCP project number: YOUR_GCP_PROJECT_NUMBER
+
+## Business records
+
+Keep EIN letters, trade-name filings, and bank details outside this repository.

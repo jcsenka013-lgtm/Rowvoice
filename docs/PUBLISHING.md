@@ -1,6 +1,8 @@
 # Publishing to the Google Workspace Marketplace
 
-These are the Phase 4 steps. They're all manual (Google Cloud console and Marketplace SDK), so this is a checklist plus the text you'll paste into the forms.
+Checklist and listing copy for the Google Cloud console and the Marketplace SDK. The listing is not public yet, and OAuth verification is not complete. Do not link an unlisted verification video from the site or the README.
+
+Production identifiers (script ID, spreadsheet ID, deployment ID, account email) stay in a local gitignored `docs/OPERATOR_NOTES.md`.
 
 ## 0. Prerequisites
 
