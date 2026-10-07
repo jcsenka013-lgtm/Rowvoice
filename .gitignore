@@ -5,3 +5,5 @@ node_modules/
 .clasprc.json
 # clasp project binding (script + spreadsheet IDs are per developer); copy from .clasp.json.example
 addon/.clasp.json
+# Local operator notes (real IDs and account emails). Copy from docs/OPERATOR_NOTES.md.example.
+docs/OPERATOR_NOTES.md

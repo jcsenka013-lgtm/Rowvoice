@@ -1,138 +1,109 @@
-# Verification & Marketplace kit
+# Verification and Marketplace kit
 
-Everything you need, ready to use, for the Google steps that need your login: Search Console, the Google Cloud project, the OAuth consent screen, the demo video, screenshots and the Marketplace SDK. Work top to bottom. Field-by-field reference and listing copy are in `docs/PUBLISHING.md`.
+Field-by-field reference and listing copy are in `docs/PUBLISHING.md`. Work top to bottom.
 
-**Already prepared:**
+The Workspace Marketplace listing is **not public**, and OAuth verification is **not complete**. A demo video for Google's review stays **Unlisted**. Do not link it from the website, the README, or a public profile.
+
+Record real IDs in local `docs/OPERATOR_NOTES.md` (gitignored), not in this file.
 
 | Item | Value |
 | --- | --- |
-| Apps Script deployment ID (Marketplace SDK) | `AKfycbz3gi8NYiD8KlLtc73wex5juccVTDWXxcosr2AcEYVETrgODwnmtKMx9x-ucbXTG56p`, version **1** (`v1.0.0-beta`, Stripe test mode) |
+| Apps Script deployment ID | `YOUR_DEPLOYMENT_ID` (version you deployed for the Marketplace SDK) |
 | Homepage | https://rowvoice.com |
 | Privacy policy | https://rowvoice.com/privacy |
 | Terms of service | https://rowvoice.com/terms |
 | Support URL | https://rowvoice.com/support |
-| Support email | support@rowvoice.com (forwards to your Gmail) |
+| Support email | support@rowvoice.com |
 | Logo, 120×120 | `docs/store-assets/oauth-logo-120.png` |
 | Icons | `docs/store-assets/icon-{32,48,96,128}.png` |
 | Card banner, 220×140 | `docs/store-assets/card-banner-220x140.png` |
-| Demo data | `docs/demo/demo-invoices.csv` |
+| Demo data | `docs/demo/demo-invoices.csv` (`.example` addresses only) |
 
-## 1. Verify rowvoice.com in Search Console (5 minutes)
+## 1. Verify rowvoice.com in Search Console
 
-1. Open https://search.google.com/search-console using **the Google account that will own the Cloud project** (jcsenka013@gmail.com).
+1. Open https://search.google.com/search-console using the Google account that will own the Cloud project (`you@example.com` in these notes; use the real account only in your local operator file).
 2. Choose **Add property → Domain** and enter `rowvoice.com`.
-3. Google shows a TXT record. Because the domain is on Cloudflare, Google usually offers **"Start verification" → sign in to Cloudflare → Authorize**, and adds the record for you. If not, go to Cloudflare → rowvoice.com → **DNS → Add record**, choose type **TXT**, name `@`, and paste the value.
-4. Click **Verify**. Once verified, tell Claude. Nothing else changes.
+3. Google shows a TXT record. Because the domain is on Cloudflare, Google often offers **Start verification** and adds the record after you authorize Cloudflare. Otherwise add a **TXT** record named `@` in the Cloudflare DNS for rowvoice.com.
+4. Click **Verify**.
 
-## 2. Standard Google Cloud project (10 minutes)
+## 2. Standard Google Cloud project
 
-> ✅ **Done 2026-09-18.** `rowvoice-prod` (386477128189) is linked, a basic consent screen exists, and the new client ID is allowed on the Worker. Billing portal verified.
-
-1. Go to https://console.cloud.google.com, open the project dropdown, click **New project**, name it `rowvoice-prod` and click Create.
-2. On the project dashboard, copy the **Project number** (digits only). Rowvoice's is `386477128189`.
-3. **Create a basic consent screen first.** Apps Script refuses to link a project without one. Go to **Google Auth Platform → Get started**:
+1. Go to https://console.cloud.google.com, create a project (for example `rowvoice-prod`), and copy the **project number** (digits only) into your local operator notes as `YOUR_GCP_PROJECT_NUMBER`.
+2. Create a basic consent screen before linking Apps Script. **Google Auth Platform → Get started**:
    - App name `Rowvoice`
-   - Support email: your Gmail (the list only offers accounts you own)
+   - Support email: an address on an account you own
    - Audience **External**
-   - Contact email: your Gmail
-   - Tick the policy box and click **Create**
+   - Contact email: an address you control
+3. Under **Audience → Test users**, add the accounts that should authorize the app while it is in Testing.
+4. Open the script with `cd addon && clasp open-script`. Go to **Project Settings → Google Cloud Platform (GCP) Project → Change project**, paste the project number, and click **Set project**.
+5. Linking changes the OAuth client ID. Open the sidebar once, then add the new audience to `GOOGLE_CLIENT_IDS` (see `docs/LAUNCH.md`). Until that ID is allowed, the sidebar stays on the Free plan.
 
-   Then go to **Audience → Test users** and add your Gmail and any beta testers. While the app is in *Testing*, only listed test users can authorize it.
-4. Open the script with `cd addon && clasp open-script`. Go to **Project Settings (gear) → Google Cloud Platform (GCP) Project → Change project**, paste the number and click **Set project**.
-5. **This changes the add-on's Google client ID.** Open the Rowvoice sidebar in the test spreadsheet once, then tell Claude. Claude reads the new ID from the Worker and adds it, the same way as before. Until then, the sidebar shows the Free plan.
+## 3. OAuth consent screen
 
-## 3. OAuth consent screen (15 minutes)
+Before submitting, confirm none of the scopes are listed as restricted, and that Search Console has verified rowvoice.com.
 
-> ✅ **Scopes and branding entered (2026-09-18).** Before submitting: check that none of the scopes show under *restricted*, and that Search Console has verified rowvoice.com (step 1), because the authorized domain needs it. Then do the demo video (step 4) and submit.
+In the Cloud project, open **Google Auth Platform**:
 
-In the Cloud console for `rowvoice-prod`, open **Google Auth Platform** (called **APIs & Services → OAuth consent screen** in older consoles).
-- **Branding:**
-  - App name `Rowvoice`
-  - Support email `support@rowvoice.com`, or your Gmail if it must be an account you own
-  - Logo `oauth-logo-120.png`
-  - Home page, privacy policy and terms of service: the URLs above
-  - Authorized domain: `rowvoice.com`
-  - Developer contact email: your Gmail
+- **Branding:** app name `Rowvoice`, support email `support@rowvoice.com` (or an account you own if the form requires it), logo `oauth-logo-120.png`, homepage, privacy policy, and terms from the table above, authorized domain `rowvoice.com`, developer contact email you control.
 - **Audience:** External.
-- **Data access (scopes):** add exactly these, with the justifications from `PUBLISHING.md` section 2:
-  - `.../auth/spreadsheets.currentonly`
-  - `.../auth/drive.file`
-  - `.../auth/script.container.ui`
-  - `.../auth/script.external_request`
-  - `.../auth/script.send_mail`
-  - `.../auth/userinfo.email`
-  - `openid`
-- **Submit for verification** once the demo video (step 4) is uploaded.
+- **Data access:** the seven scopes in `docs/PUBLISHING.md`, with those justifications.
+- **Submit for verification** after the demo video below is uploaded. Submission is not the same as approval.
 
 ## 4. Demo video (about 2 minutes, unlisted YouTube)
 
 **Before recording:**
+
 - Make a new spreadsheet called "Rowvoice demo".
-- Go to **File → Import → Upload** `docs/demo/demo-invoices.csv` and choose **Replace current sheet**.
-- In the last row, put your own name and Gmail.
+- **File → Import → Upload** `docs/demo/demo-invoices.csv` and choose **Replace current sheet**.
+- The last sample row uses `you@example.com`. For the recording only, replace that row with an address you control. Do not commit that change.
 - Remove Rowvoice's access so the consent screen appears: https://myaccount.google.com/permissions → Rowvoice → **Remove access**.
-- Use the Windows **Snipping Tool → Record**, or the Xbox Game Bar (Win+G), at 1080p. Narrate, or add captions.
+- Record at 1080p and narrate or caption the scopes.
 
 | Time | Show | Say |
 | --- | --- | --- |
 | 0:00 | rowvoice.com homepage | "Rowvoice is a Google Sheets add-on that turns spreadsheet rows into PDF invoices." |
-| 0:10 | Extensions → Rowvoice → Open. **Consent screen with every permission visible.** Scroll slowly. | "These are the permissions Rowvoice asks for." Read each one briefly. |
-| 0:30 | Approve. Sidebar opens; header row and columns auto-matched. | "Spreadsheet access, for this spreadsheet only: Rowvoice reads the header row and the rows I select." |
-| 0:45 | Business profile: enter a name and save. Select row 2 and click **Preview**. | "The sidebar and this preview dialog are the third-party UI permission." |
-| 1:00 | Select rows 2–5 and click **Create invoice(s)**. The write-back appears (Invoice #, Unpaid, Open PDF). | "Invoices are created and written back to these rows." |
-| 1:15 | Click **Open PDF**. Show the **Rowvoice folder in Drive**. | "Drive access is limited to files Rowvoice creates: this folder, the PDFs and my logo. It can't see my other files." |
-| 1:30 | Sidebar usage box and upgrade link. Briefly show **Pro $6/mo** checkout, a test card, and **Refresh** showing Pro. | "External requests go to our license server at api.rowvoice.com to check the subscription, using my Google sign-in to identify the account." |
-| 1:45 | Last row (your Gmail): tick **Email each invoice** and click Create. Switch to Gmail and open the email with the PDF attached. | "Send-mail permission: with this box ticked, Rowvoice emails the invoice from my Gmail. It can't read my mail." |
-| 2:00 | Status cell note "Emailed to…". Click **Mark Paid**. | "That's the whole flow." |
+| 0:10 | Extensions → Rowvoice → Open. Consent screen with every permission visible. | "These are the permissions Rowvoice asks for." |
+| 0:30 | Approve. Sidebar opens; header row and columns auto-matched. | "Spreadsheet access is for this spreadsheet only." |
+| 0:45 | Business profile, then Preview on row 2. | "The sidebar and this preview dialog are the third-party UI permission." |
+| 1:00 | Create invoices for rows 2–5. Invoice number, Unpaid, and Open PDF appear. | "Invoices are created and written back to these rows." |
+| 1:15 | Open a PDF and show the Rowvoice folder in Drive. | "Drive access is limited to files Rowvoice creates." |
+| 1:30 | Usage box, Pro checkout with a test card, Refresh showing Pro. | "External requests go to the license server to check the subscription." |
+| 1:45 | Email one invoice, then open the message with the PDF attached. | "Send-mail sends from my account when I tick the box. It cannot read mail." |
+| 2:00 | Status note, then Mark Paid. | "That's the whole flow." |
 
-Upload to YouTube as **Unlisted**, and paste the link into the verification form.
+Upload to YouTube as **Unlisted** and paste the link only into Google's verification form.
 
-Tips:
-- **The app name on the consent screen must read "Rowvoice".** If it still says "SheetInvoice", rename the Apps Script project first; step 2 fixes this once the GCP project is linked.
-- **Use the demo data, not real client data.**
-- **Keep the browser at 100% zoom** so the scope text is readable.
+- The consent screen name must read **Rowvoice**.
+- Use the demo data, not real client data.
+- Keep the browser at 100% zoom so the scope text is readable.
 
-## 5. Screenshots (1280×800, 3–5)
+## 5. Screenshots (1280×800)
 
-Use the "Rowvoice demo" spreadsheet with the browser at **1280×800**:
-- Chrome DevTools (F12) → device toolbar → Responsive → 1280×800 → ⋮ → **Capture screenshot**, or resize the window and use Win+Shift+S.
+Use the demo spreadsheet at 1280×800:
 
-Shots:
-1. The sheet with rows 2–5 invoiced (Invoice #, statuses, Open PDF links) and the sidebar open.
-2. The **Preview** dialog showing the Modern template with a logo.
+1. Rows invoiced, sidebar open.
+2. Preview dialog on the Modern template.
 3. The PDF open in Drive next to the sheet.
-4. Column mapping with auto-matched columns on a sheet with a title banner in row 1.
-5. Optional: the sidebar showing **Pro plan** and the email checkbox.
+4. Column mapping on a sheet with a title banner.
+5. Optional: sidebar showing Pro and the email checkbox.
 
-Save them to `docs/store-assets/screenshots/` if you want them in the repo.
+Save them locally or under `docs/store-assets/screenshots/` only if they contain no customer data.
 
-## 6. Marketplace SDK (after the consent screen is submitted)
+## 6. Marketplace SDK
 
-In `rowvoice-prod`, go to **APIs & Services → Library → "Google Workspace Marketplace SDK" → Enable**.
-- **App configuration:**
-  - Visibility **Private**. It's labelled Unlisted in some consoles; use it for the beta.
-  - Installation: individual and admin install.
-  - App integration: **Sheets add-on**, with deployment ID `AKfycbz3gi8NYiD8KlLtc73wex5juccVTDWXxcosr2AcEYVETrgODwnmtKMx9x-ucbXTG56p`, version `1`.
-  - OAuth scopes: the same seven as above.
-  - Developer name: `CAPTURES BY JC LLC`, or "Rowvoice" once the trade name is approved.
-  - Developer website: https://rowvoice.com. Developer email: support@rowvoice.com.
-- **Store listing:**
-  - The description text from `PUBLISHING.md` section 4.
-  - Category: Business tools.
-  - Icons, banner and screenshots from `docs/store-assets/`.
-  - Terms, privacy and support URLs from the table above.
-  - Pricing: **Free with paid features**.
-- **Publish.** Then share the install link with 3–5 beta testers, including at least one on a Google Workspace (company) account.
+Enable **Google Workspace Marketplace SDK** in the Cloud project.
 
-## Releasing a new add-on version later
+- **App configuration:** visibility **Private** for the beta, individual and admin install, Sheets add-on, deployment ID `YOUR_DEPLOYMENT_ID` and the matching version, the same seven scopes, developer name `CAPTURES BY JC LLC`, website https://rowvoice.com, email support@rowvoice.com.
+- **Store listing:** description from `docs/PUBLISHING.md`, category Business tools, icons and banner from `docs/store-assets/`, terms, privacy, and support URLs from the table above, pricing **Free with paid features**.
+- Publish unlisted, then share the install link with a few beta testers, including one Workspace account. Switch to Public only after OAuth verification is approved.
 
-Claude runs these when code changes:
+## Releasing a new add-on version
 
 ```sh
 cd addon
 clasp push
 clasp create-version "v1.0.x: what changed"
-clasp update-deployment AKfycbz3gi8NYiD8KlLtc73wex5juccVTDWXxcosr2AcEYVETrgODwnmtKMx9x-ucbXTG56p --versionNumber <n>
+clasp update-deployment YOUR_DEPLOYMENT_ID --versionNumber <n>
 ```
 
-The Marketplace keeps pointing at the same deployment ID, so the listing doesn't need editing.
+The Marketplace listing can keep pointing at the same deployment ID.
