@@ -5,8 +5,6 @@
   <style>
     body { font-family: Helvetica, Arial, sans-serif; font-size: 10.5pt; color: #1f2933; margin: 0; }
     table { width: 100%; border-collapse: collapse; }
-    .band { background: #1e3a5f; color: #ffffff; padding: 28px 36px; }
-    .band .muted { color: #c8d6e5; }
     .content { padding: 28px 36px; }
     .title { font-size: 22pt; font-weight: bold; }
     .label { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1px; color: #7b8794; margin-bottom: 4px; }
@@ -15,26 +13,23 @@
     .items td { padding: 9px 8px; border-bottom: 1px solid #e4e7eb; vertical-align: top; }
     .amount, .items th.amount { text-align: right; white-space: nowrap; }
     .sub td { color: #52606d; padding: 6px 8px; }
-    .total { background: #1e3a5f; color: #ffffff; font-size: 13pt; font-weight: bold; }
-    .total td { border-bottom: none; padding: 12px 8px; }
     .footer { margin-top: 40px; font-size: 8pt; color: #9aa5b1; text-align: center; }
   </style>
 </head>
 <body>
-  <div class="band">
-    <table>
-      <tr>
-        <td style="vertical-align: middle;">
-          <? if (logo) { ?><img src="<?!= logo ?>" style="max-height: 56px; max-width: 180px;"><br><? } ?>
-          <span class="title"><?= profile.businessName ?></span>
-        </td>
-        <td style="vertical-align: middle; text-align: right;">
-          <span class="title">Invoice</span><br>
-          <span class="muted"><?= invoice.number ?></span>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <!-- The HTML-to-PDF converter paints backgrounds on td/th only, so the navy band and total bar set bgcolor and background-color on the cells. Cell padding is 1px larger than the old div (28px 36px) because a collapsed table cell paints that much tighter. -->
+  <table cellspacing="0">
+    <tr>
+      <td bgcolor="#1e3a5f" style="background-color:#1e3a5f; color:#ffffff; vertical-align:middle; padding:29px 8px 29px 37px;">
+        <? if (logo) { ?><img src="<?!= logo ?>" style="max-height:56px; max-width:180px;"><br><? } ?>
+        <span class="title" style="color:#ffffff;"><?= profile.businessName ?></span>
+      </td>
+      <td bgcolor="#1e3a5f" style="background-color:#1e3a5f; color:#ffffff; vertical-align:middle; text-align:right; padding:29px 37px 29px 8px;">
+        <span class="title" style="color:#ffffff;">Invoice</span><br>
+        <span style="color:#c8d6e5;"><?= invoice.number ?></span>
+      </td>
+    </tr>
+  </table>
 
   <div class="content">
     <table>
@@ -75,7 +70,10 @@
       <? if (invoice.discountText) { ?><tr class="sub"><td>Discount</td><td class="amount"><?= invoice.discountText ?></td></tr><? } ?>
       <? if (invoice.taxText) { ?><tr class="sub"><td><?= invoice.taxLabel ?></td><td class="amount"><?= invoice.taxText ?></td></tr><? } ?>
       <? } ?>
-      <tr class="total"><td>Total due</td><td class="amount"><?= invoice.totalText ?></td></tr>
+      <tr>
+        <td bgcolor="#1e3a5f" style="background-color:#1e3a5f; color:#ffffff; font-size:13pt; font-weight:bold; border-bottom:none; padding:12px 8px;">Total due</td>
+        <td bgcolor="#1e3a5f" class="amount" style="background-color:#1e3a5f; color:#ffffff; font-size:13pt; font-weight:bold; border-bottom:none; padding:12px 8px; text-align:right; white-space:nowrap;"><?= invoice.totalText ?></td>
+      </tr>
     </table>
 
     <? if (invoice.notes) { ?>
