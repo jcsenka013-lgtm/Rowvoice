@@ -15,6 +15,7 @@
     textarea { height: 56px; }
     textarea.tall { height: 110px; }
     .hint { color: #666; font-size: 11px; margin-top: 4px; }
+    .hint.error { color: #c5221f; }
     .row { display: flex; gap: 6px; align-items: flex-end; }
     .row > * { flex: 1; min-width: 0; }
     #status { margin-top: 10px; white-space: pre-line; }
@@ -87,6 +88,7 @@
       <div class="hint">Placeholders: {client} {number} {total} {dueDate} {business}. Sent from your Gmail with the PDF attached. Replies go to your business email.</div>
     </details>
     <button class="action" id="saveProfile">Save profile</button>
+    <div id="profileStatus" class="hint"></div>
   </details>
 
   <details id="mappingSection">
@@ -139,6 +141,9 @@
     var state = null;
     var busy = false;
     var CHUNK_SIZE = 5; // rows per server call: keeps each call far below the 6-minute limit
+    // True while the profile form has edits that aren't saved yet. Re-renders (logo upload, starter
+    // sheet, switching tabs) must not overwrite what the user typed.
+    var profileDirty = false;
     var PROFILE_KEYS = ['businessName', 'businessEmail', 'address', 'taxId', 'currency', 'prefix', 'numbering',
       'taxLabel', 'taxRate', 'template', 'paymentInstructions', 'emailSubject', 'emailMessage'];
 
@@ -231,7 +236,11 @@
     }
 
     function renderProfile(profile) {
-      PROFILE_KEYS.forEach(function (key) { $(key).value = profile[key] || ''; });
+      if (!profileDirty) PROFILE_KEYS.forEach(function (key) { $(key).value = profile[key] || ''; });
+      renderLogo(profile);
+    }
+
+    function renderLogo(profile) {
       $('logoState').textContent = profile.logoFileId ? 'Logo uploaded.' : 'No logo.';
       $('removeLogo').style.display = profile.logoFileId ? '' : 'none';
       $('logoInput').value = '';
@@ -302,7 +311,7 @@
       applyPlanRestrictions();
       $('quickstart').classList.toggle('hidden', state.mappingComplete);
       // Open the first incomplete step. A detected-but-unsaved or broken mapping is worth a look.
-      $('profileSection').open = !state.profile.businessName;
+      $('profileSection').open = profileDirty || !state.profile.businessName;
       $('mappingSection').open = !state.sheetIsEmpty &&
         (!state.mappingComplete || !!state.mapping.auto || !!state.mapping.missing);
     }
@@ -370,15 +379,42 @@
       }, 'Creating starter sheet…');
     };
 
-    $('saveProfile').onclick = function () {
+    function setProfileStatus(message, isError) {
+      $('profileStatus').textContent = message || '';
+      $('profileStatus').className = 'hint' + (isError ? ' error' : '');
+    }
+
+    function readProfileForm() {
       var profile = {};
       PROFILE_KEYS.forEach(function (key) { profile[key] = $(key).value; });
-      call('saveProfile', [profile], function (saved) {
+      return profile;
+    }
+
+    /** Saves the form; the result shows next to the button as well as in the main status line. */
+    function saveProfileForm(onSaved) {
+      setProfileStatus('Saving…');
+      call('saveProfile', [readProfileForm()], function (saved) {
+        profileDirty = false;
         state.profile = saved;
         renderProfile(saved);
+        setProfileStatus('Profile saved.');
         setStatus('Profile saved.');
-      }, 'Saving…');
-    };
+        if (onSaved) onSaved(saved);
+      }, 'Saving…', function (err) {
+        setProfileStatus('Not saved: ' + (err.message || String(err)), true);
+      });
+    }
+
+    $('saveProfile').onclick = function () { saveProfileForm(); };
+
+    PROFILE_KEYS.forEach(function (key) {
+      var markDirty = function () {
+        profileDirty = true;
+        setProfileStatus('Unsaved changes.');
+      };
+      $(key).addEventListener('input', markDirty);
+      $(key).addEventListener('change', markDirty);
+    });
 
     $('logoInput').onchange = function () {
       var file = this.files[0];
@@ -389,15 +425,15 @@
         var base64 = String(reader.result).split(',')[1];
         call('uploadLogo', [base64, file.type], function (saved) {
           state.profile = saved;
-          renderProfile(saved);
-          setStatus('Logo uploaded.');
+          renderLogo(saved);
+          setStatus(profileDirty ? 'Logo uploaded. Click Save profile to keep your other changes.' : 'Logo uploaded.');
         }, 'Uploading logo…');
       };
       reader.readAsDataURL(file);
     };
 
     $('removeLogo').onclick = function () {
-      call('removeLogo', [], function (saved) { state.profile = saved; renderProfile(saved); });
+      call('removeLogo', [], function (saved) { state.profile = saved; renderLogo(saved); });
     };
 
     $('headerRow').onchange = function () {
@@ -435,15 +471,20 @@
     };
 
     $('generate').onclick = function () {
-      if (!$('businessName').value.trim() || !state.profile.businessName) {
+      if (!$('businessName').value.trim()) {
         $('profileSection').open = true;
         $('businessName').focus();
-        setStatus('Enter and save your business name first. It appears on every invoice.', true);
+        setStatus('Enter your business name first. It appears on every invoice.', true);
         return;
       }
       var options = { email: $('emailOnCreate').checked };
       $('results').textContent = '';
-      call('prepareInvoiceRun', [options], function (run) { processRun(run, options); }, 'Checking selection…');
+      var start = function () {
+        call('prepareInvoiceRun', [options], function (run) { processRun(run, options); }, 'Checking selection…');
+      };
+      // Typed but not saved yet: save first so the invoice uses what's on screen.
+      if (profileDirty || !state.profile.businessName) saveProfileForm(start);
+      else start();
     };
 
     /** Sends the run's rows in chunks so progress is visible and no call nears the time limit. */

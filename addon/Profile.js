@@ -27,26 +27,51 @@ var LOGO_MAX_BYTES = 300 * 1024;
 var LOGO_MIME_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/pjpeg', 'image/x-png', 'image/webp'];
 
 function getProfile() {
-  var raw = PropertiesService.getUserProperties().getProperty('profile');
-  var stored = raw ? JSON.parse(raw) : {};
+  return mergeProfile_(PropertiesService.getUserProperties().getProperty('profile'));
+}
+
+/**
+ * Stored JSON (or nothing, for a brand-new user) -> a complete profile. A missing, unreadable or
+ * partial value falls back to the defaults field by field instead of breaking the sidebar.
+ */
+function mergeProfile_(raw) {
+  var stored = {};
+  if (raw) {
+    try {
+      stored = JSON.parse(raw) || {};
+    } catch (err) {
+      stored = {};
+    }
+  }
+  if (typeof stored !== 'object' || Array.isArray(stored)) stored = {};
   var profile = {};
   Object.keys(PROFILE_DEFAULTS).forEach(function (key) {
-    profile[key] = stored[key] !== undefined ? stored[key] : PROFILE_DEFAULTS[key];
+    var value = stored[key];
+    profile[key] = value === undefined || value === null ? PROFILE_DEFAULTS[key] : value;
   });
   return profile;
 }
 
 function saveProfile(input) {
   var current = getProfile();
+  var profile = cleanProfileInput_(input, current);
+  writeProfile_(profile);
+  return profile;
+}
+
+/** Validates and normalises sidebar input over the current profile. Pure: no Google services. */
+function cleanProfileInput_(input, current) {
   var profile = {};
   Object.keys(PROFILE_DEFAULTS).forEach(function (key) {
-    var value = input && input[key] !== undefined ? input[key] : current[key];
+    var value = input && input[key] !== undefined && input[key] !== null ? input[key] : current[key];
+    if (value === undefined || value === null) value = PROFILE_DEFAULTS[key];
     profile[key] = String(value).trim().slice(0, PROFILE_MAX_LENGTH);
   });
   // The logo is only changed through uploadLogo/removeLogo.
-  profile.logoFileId = current.logoFileId;
+  profile.logoFileId = current.logoFileId || '';
 
-  profile.currency = profile.currency.toUpperCase();
+  // A blank currency (new users sometimes clear it) means the default, not an error.
+  profile.currency = profile.currency.toUpperCase() || PROFILE_DEFAULTS.currency;
   if (!/^[A-Z]{3}$/.test(profile.currency)) {
     throw new Error('Currency must be a 3-letter code, like USD or EUR.');
   }
@@ -61,8 +86,6 @@ function saveProfile(input) {
   profile.prefix = profile.prefix.slice(0, 12);
   profile.emailSubject = profile.emailSubject.slice(0, 200) || PROFILE_DEFAULTS.emailSubject;
   profile.emailMessage = profile.emailMessage || PROFILE_DEFAULTS.emailMessage;
-
-  writeProfile_(profile);
   return profile;
 }
 
@@ -91,6 +114,13 @@ function removeLogo() {
   return profile;
 }
 
+// Apps Script caps one property value at 9 KB; stay under it with a message the user can act on.
+var PROFILE_MAX_STORED_CHARS = 8500;
+
 function writeProfile_(profile) {
-  PropertiesService.getUserProperties().setProperty('profile', JSON.stringify(profile));
+  var json = JSON.stringify(profile);
+  if (json.length > PROFILE_MAX_STORED_CHARS) {
+    throw new Error('Your profile is too long to save. Shorten the address, payment instructions or email message.');
+  }
+  PropertiesService.getUserProperties().setProperty('profile', json);
 }

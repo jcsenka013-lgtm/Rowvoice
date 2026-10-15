@@ -7,12 +7,13 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const context = vm.createContext({ console });
-for (const file of ['Money.js', 'Mapping.js', 'Invoice.js']) {
+for (const file of ['Money.js', 'Mapping.js', 'Invoice.js', 'Profile.js']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'addon', file), 'utf8'), context, { filename: file });
 }
 const {
   autoMapHeaders_, detectHeaderRow_, parseLineItems_, headerScore_, resolveMapping_, parseAmount_, parsePercent_,
-  numberLocale_, formatMoney_, computeTotals_, fillPlaceholders_, driveFileIdFromUrl_
+  numberLocale_, formatMoney_, computeTotals_, fillPlaceholders_, driveFileIdFromUrl_,
+  pickTimeZone_, mergeProfile_, cleanProfileInput_, PROFILE_DEFAULTS
 } = context;
 const plain = (obj) => JSON.parse(JSON.stringify(obj));
 
@@ -237,3 +238,46 @@ for (const file of ['Classic.html', 'Modern.html']) {
     }
   });
 }
+
+test('time zone falls back when the spreadsheet reports none (fresh Marketplace install)', () => {
+  assert.equal(pickTimeZone_([() => 'America/Chicago', () => 'America/New_York']), 'America/Chicago');
+  assert.equal(pickTimeZone_([() => null, () => 'America/New_York']), 'America/New_York');
+  assert.equal(pickTimeZone_([() => '', () => undefined]), 'UTC');
+  assert.equal(pickTimeZone_([() => { throw new Error('nope'); }, () => ' Europe/Paris ']), 'Europe/Paris');
+  assert.equal(pickTimeZone_([() => 42]), 'UTC');
+  assert.equal(pickTimeZone_([]), 'UTC');
+});
+
+test('a brand-new user (no stored profile) gets the full default profile', () => {
+  const defaults = plain(PROFILE_DEFAULTS);
+  assert.deepEqual(plain(mergeProfile_(null)), defaults);
+  assert.deepEqual(plain(mergeProfile_('')), defaults);
+  assert.deepEqual(plain(mergeProfile_('not json')), defaults);
+  assert.deepEqual(plain(mergeProfile_('null')), defaults);
+  const partial = plain(mergeProfile_(JSON.stringify({ businessName: 'Harbor', currency: null })));
+  assert.equal(partial.businessName, 'Harbor');
+  assert.equal(partial.currency, 'USD');
+});
+
+test('saving a profile for a new user works and normalises input', () => {
+  const current = plain(mergeProfile_(null));
+  const saved = plain(cleanProfileInput_({
+    businessName: '  Harbor Coffee Co. ', currency: 'eur', taxRate: '8.25%', template: 'Nope',
+    numbering: 'bogus', emailSubject: '', emailMessage: null, logoFileId: 'attacker-file'
+  }, current));
+  assert.equal(saved.businessName, 'Harbor Coffee Co.');
+  assert.equal(saved.currency, 'EUR');
+  assert.equal(saved.taxRate, '8.25');
+  assert.equal(saved.template, 'Classic');
+  assert.equal(saved.numbering, 'spreadsheet');
+  assert.equal(saved.emailSubject, PROFILE_DEFAULTS.emailSubject);
+  assert.equal(saved.emailMessage, PROFILE_DEFAULTS.emailMessage);
+  assert.equal(saved.logoFileId, '', 'logo only changes through uploadLogo/removeLogo');
+});
+
+test('a cleared currency falls back to USD; bad values still give a clear error', () => {
+  const current = plain(mergeProfile_(null));
+  assert.equal(cleanProfileInput_({ businessName: 'X', currency: '' }, current).currency, 'USD');
+  assert.throws(() => cleanProfileInput_({ businessName: 'X', currency: 'US' }, current), /3-letter code/);
+  assert.throws(() => cleanProfileInput_({ businessName: 'X', taxRate: '150' }, current), /between 0 and 100/);
+});

@@ -18,6 +18,7 @@ var TEMPLATES = ['Classic', 'Modern'];
 var MAX_ROWS_PER_RUN = 200;
 var ROW_LOCK_WAIT_MS = 30000;
 var STATUS_VALUES = ['Unpaid', 'Paid', 'Overdue', 'Void'];
+var FALLBACK_TIME_ZONE = 'UTC';
 
 /** Validates everything up front and returns the rows to process. Adds output columns if missing. */
 function prepareInvoiceRun(options) {
@@ -77,10 +78,36 @@ function requireMapping_(sheet) {
 function invoiceContext_(profile) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   return {
-    timeZone: spreadsheet.getSpreadsheetTimeZone(),
+    timeZone: invoiceTimeZone_(spreadsheet),
     locale: numberLocale_(spreadsheet.getSpreadsheetLocale()),
     logo: logoDataUri_(profile)
   };
+}
+
+/**
+ * Time zone for invoice dates. Some brand-new spreadsheets (seen on a fresh account installing from
+ * the Marketplace) report no time zone at all, and Utilities.formatDate throws "Invalid argument:
+ * timeZone" for a null one, failing every row. Fall back to the script's zone, then UTC.
+ */
+function invoiceTimeZone_(spreadsheet) {
+  return pickTimeZone_([
+    function () { return spreadsheet.getSpreadsheetTimeZone(); },
+    function () { return Session.getScriptTimeZone(); }
+  ]);
+}
+
+/** First usable time zone ID from the getters (each may throw or return null/''), else 'UTC'. */
+function pickTimeZone_(getters) {
+  for (var i = 0; i < getters.length; i++) {
+    var tz;
+    try {
+      tz = getters[i]();
+    } catch (err) {
+      tz = null;
+    }
+    if (typeof tz === 'string' && tz.trim()) return tz.trim();
+  }
+  return FALLBACK_TIME_ZONE;
 }
 
 function selectedDataRows_(sheet, headerRow) {
