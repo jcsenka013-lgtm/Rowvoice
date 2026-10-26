@@ -1,6 +1,6 @@
 # Publishing to the Google Workspace Marketplace
 
-Checklist and listing copy for the Google Cloud console and the Marketplace SDK. The listing is not public yet, and OAuth verification is not complete. Do not link an unlisted verification video from the site or the README.
+Checklist and listing copy for the Google Cloud console and the Marketplace SDK. The listing is public at https://workspace.google.com/marketplace/app/rowvoice/386477128189. Do not link an unlisted verification video from the site or the README.
 
 Production identifiers (script ID, spreadsheet ID, deployment ID, account email) stay in a local gitignored `docs/OPERATOR_NOTES.md`.
 

@@ -1,7 +1,7 @@
-// Launch switch. Set this to the Google Workspace Marketplace listing URL when the add-on is public,
-// then redeploy (cd site && npx wrangler deploy). Until then, install buttons collect launch
-// notifications by email and "launching soon" labels are shown.
-var MARKETPLACE_URL = '';
+// Public Google Workspace Marketplace listing. Install buttons in the HTML already link here so they
+// work without JavaScript; this keeps any [data-install] link in sync. Redeploy after changing it
+// (cd site && npx wrangler deploy).
+var MARKETPLACE_URL = 'https://workspace.google.com/marketplace/app/rowvoice/386477128189';
 
 if (MARKETPLACE_URL) {
   document.querySelectorAll('[data-install]').forEach(function (link) {

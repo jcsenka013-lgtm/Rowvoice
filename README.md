@@ -10,7 +10,7 @@ The banner above is the Marketplace card asset in this repo. Product screenshots
 
 ## Status
 
-The marketing site is live. The Google Workspace Marketplace listing is **not public yet**, and OAuth verification is **not complete**. Until a public listing exists, [rowvoice.com](https://rowvoice.com) offers a launch notification instead of an install button.
+Rowvoice is live on the Google Workspace Marketplace: [install Rowvoice](https://workspace.google.com/marketplace/app/rowvoice/386477128189). The marketing site at [rowvoice.com](https://rowvoice.com) links every install button to that listing.
 
 A development install with [clasp](https://github.com/google/clasp) (below) runs the add-on in a spreadsheet you control. That is not a Marketplace install.
 
