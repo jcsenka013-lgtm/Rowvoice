@@ -2,7 +2,7 @@
 
 Steps that need a browser or a logged-in account, in dependency order. Commands run from the repo root unless a step says otherwise.
 
-The marketing site can be live while the Google Workspace Marketplace listing is still private. Do not describe the listing as public, or OAuth verification as complete, until both are actually done.
+Rowvoice is live and public on the Google Workspace Marketplace: https://workspace.google.com/marketplace/app/rowvoice/386477128189. The sections below are kept as a record of the launch steps and for redeploys.
 
 Real Apps Script IDs, spreadsheet IDs, and account emails belong in a local `docs/OPERATOR_NOTES.md` (gitignored). Start from `docs/OPERATOR_NOTES.md.example`. Do not put them in this file.
 
@@ -19,7 +19,7 @@ After any add-on change: `cd addon && clasp push`.
 
 1. Add the domain to the Cloudflare account that owns the project. Both configs already use **rowvoice.com**: the license Worker at `api.rowvoice.com`, and the site at `rowvoice.com` and `www.rowvoice.com`.
 2. Deploy the license Worker with `cd license-worker && npm run deploy`. `https://api.rowvoice.com/health` should return `{"ok":true}`.
-3. Deploy the site with `cd site && npx wrangler deploy`. Until the Marketplace listing is public, install buttons stay "Notify me" links (`MARKETPLACE_URL` in `site/public/site.js`).
+3. Deploy the site with `cd site && npx wrangler deploy`. Install buttons link to the public Marketplace listing (`MARKETPLACE_URL` in `site/public/site.js`).
 4. Turn on Email Routing so `support@rowvoice.com` reaches an inbox you control.
 
 Wrangler configs pin `account_id` so a deploy while logged into another Cloudflare account fails instead of creating a second project.
@@ -73,7 +73,7 @@ Follow `docs/PUBLISHING.md` and `docs/VERIFICATION_KIT.md`.
 
 ## 7. Marketplace
 
-The listing is not public yet.
+Done. The listing is public.
 
 1. Set up the Marketplace SDK app configuration and store listing, using the copy in `docs/PUBLISHING.md`. Icons and the card banner are in `docs/store-assets/`.
 2. Take screenshots from the real add-on. Do not commit customer data.

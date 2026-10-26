@@ -2,7 +2,7 @@
 
 Field-by-field reference and listing copy are in `docs/PUBLISHING.md`. Work top to bottom.
 
-The Workspace Marketplace listing is **not public**, and OAuth verification is **not complete**. A demo video for Google's review stays **Unlisted**. Do not link it from the website, the README, or a public profile.
+The Workspace Marketplace listing is **public** at https://workspace.google.com/marketplace/app/rowvoice/386477128189. The demo video for Google's review stays **Unlisted**. Do not link it from the website, the README, or a public profile.
 
 Record real IDs in local `docs/OPERATOR_NOTES.md` (gitignored), not in this file.
 
